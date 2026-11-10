@@ -15,9 +15,37 @@ export function sem(xs: number[]): number {
 }
 
 const T975 = [
-  NaN, 12.706, 4.303, 3.182, 2.776, 2.571, 2.447, 2.365, 2.306, 2.262, 2.228, 2.201, 2.179, 2.16,
-  2.145, 2.131, 2.12, 2.11, 2.101, 2.093, 2.086, 2.08, 2.074, 2.069, 2.064, 2.06, 2.056, 2.052,
-  2.048, 2.045, 2.042,
+  NaN,
+  12.706,
+  4.303,
+  3.182,
+  2.776,
+  2.571,
+  2.447,
+  2.365,
+  2.306,
+  2.262,
+  2.228,
+  2.201,
+  2.179,
+  2.16,
+  2.145,
+  2.131,
+  2.12,
+  2.11,
+  2.101,
+  2.093,
+  2.086,
+  2.08,
+  2.074,
+  2.069,
+  2.064,
+  2.06,
+  2.056,
+  2.052,
+  2.048,
+  2.045,
+  2.042,
 ];
 
 /** Two-sided 97.5% quantile of Student's t with df degrees of freedom. */
@@ -77,7 +105,7 @@ export function mannWhitneyU(a: number[], b: number[]): MannWhitney {
   const ranks = new Array<number>(all.length);
   let tieTerm = 0;
   let hasTies = false;
-  for (let i = 0; i < all.length; ) {
+  for (let i = 0; i < all.length;) {
     let j = i;
     while (j + 1 < all.length && all[j + 1].v === all[i].v) j++;
     const r = (i + j) / 2 + 1;

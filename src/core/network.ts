@@ -267,8 +267,7 @@ export class Network {
    *    (the source fired before i: pre-before-post).
    */
   private applyStdp(ns: number): void {
-    const { spikes, outStart, outTarget, plasticSyn, w, inStart, inSyn, inSrc, trace, nExc } =
-      this;
+    const { spikes, outStart, outTarget, plasticSyn, w, inStart, inSyn, inSrc, trace, nExc } = this;
     const { aPlus, aMinus, wMax } = this.p;
     for (let q = 0; q < ns; q++) {
       const i = spikes[q];

@@ -13,7 +13,13 @@ import { availableParallelism } from 'node:os';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { FEEDBACK_MODES, defaultConfig, type FeedbackMode } from '../src/core/closedLoop.ts';
-import { resultsToCsv, runSession, summarize, type RunResult, type RunSpec } from '../src/core/experiment.ts';
+import {
+  resultsToCsv,
+  runSession,
+  summarize,
+  type RunResult,
+  type RunSpec,
+} from '../src/core/experiment.ts';
 import { PRESETS, applyPreset, type PresetName } from '../src/core/presets.ts';
 
 interface Options {

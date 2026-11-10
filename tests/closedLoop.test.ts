@@ -63,7 +63,9 @@ describe('closed loop', () => {
 
   it('predictable feedback is a synchronous 100 Hz burst on all sensory electrodes', () => {
     const { sim, electrodes, times } = feedbackPulses('predictable', 2000);
-    expect([...electrodes].sort((x, y) => x - y)).toEqual([...sim.layout.sensory].sort((x, y) => x - y));
+    expect([...electrodes].sort((x, y) => x - y)).toEqual(
+      [...sim.layout.sensory].sort((x, y) => x - y),
+    );
     expect(times).toHaveLength(10);
     for (let k = 1; k < times.length; k++) expect(times[k] - times[k - 1]).toBe(10);
     expect(times[times.length - 1]).toBeLessThan(100);
@@ -108,7 +110,11 @@ describe('experiment runner', () => {
     expect(a).toEqual(b);
     expect(a.binRally).toHaveLength(4);
     expect(a.hits + a.misses).toBeGreaterThan(0);
-    const summary = summarize([a, runSession({ ...spec, seed: 6 }), runSession({ ...spec, mode: 'predictable', seed: 5 })]);
+    const summary = summarize([
+      a,
+      runSession({ ...spec, seed: 6 }),
+      runSession({ ...spec, mode: 'predictable', seed: 5 }),
+    ]);
     expect(summary.conditions.map((c) => c.mode)).toEqual(['silent', 'predictable']);
     expect(summary.comparisons.length).toBe(2);
     const csv = resultsToCsv([a]);
