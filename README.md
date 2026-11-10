@@ -3,7 +3,7 @@
 [![CI](https://github.com/veermshah/dishbrain-playground/actions/workflows/ci.yml/badge.svg)](https://github.com/veermshah/dishbrain-playground/actions/workflows/ci.yml)
 [![Deploy](https://github.com/veermshah/dishbrain-playground/actions/workflows/pages.yml/badge.svg)](https://github.com/veermshah/dishbrain-playground/actions/workflows/pages.yml)
 
-**Live demo: https://veermshah.github.io/dishbrain-playground/**
+**Live demo: https://veermickey.com/dishbrain-playground/**
 
 A simulated culture of 1000 spiking neurons sits on a virtual 8×8 electrode array and plays Pong in the
 browser. I built it to poke at one question from the DishBrain paper: does the _kind_ of feedback a
