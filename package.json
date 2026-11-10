@@ -18,13 +18,15 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "experiment": "node scripts/experiment.ts"
+    "experiment": "node scripts/experiment.ts",
+    "screenshot": "node scripts/screenshot.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
     "@types/node": "^24.19.2",
     "eslint": "^9.39.5",
     "globals": "^17.14.0",
+    "playwright-core": "^1.64.1",
     "prettier": "^3.9.10",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.72.1",
