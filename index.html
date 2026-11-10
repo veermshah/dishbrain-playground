@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DishBrain Playground</title>
+    <meta
+      name="description"
+      content="A simulated culture of 1000 spiking neurons on a virtual 8x8 electrode array learns (or fails to learn) Pong under predictable, unpredictable and silent feedback."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b0f0e'/%3E%3Cg fill='%237cffb2'%3E%3Ccircle cx='9' cy='9' r='2.4'/%3E%3Ccircle cx='16' cy='9' r='2.4' opacity='.5'/%3E%3Ccircle cx='23' cy='9' r='2.4'/%3E%3Ccircle cx='9' cy='16' r='2.4' opacity='.5'/%3E%3Ccircle cx='16' cy='16' r='2.4'/%3E%3Ccircle cx='23' cy='16' r='2.4' opacity='.5'/%3E%3Ccircle cx='9' cy='23' r='2.4'/%3E%3Ccircle cx='16' cy='23' r='2.4' opacity='.5'/%3E%3Ccircle cx='23' cy='23' r='2.4'/%3E%3C/g%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div>
+          <h1>DishBrain Playground</h1>
+          <p class="subtitle">In-silico culture · 8×8 MEA · closed-loop Pong</p>
+        </div>
+      </div>
+      <div class="readouts" aria-live="off">
+        <div class="readout">
+          <span class="lbl">T</span><span id="ro-time" class="val">00:00.0</span>
+        </div>
+        <div class="readout">
+          <span class="lbl">SPEED</span><span id="ro-speed" class="val">1×</span>
+        </div>
+        <div class="readout">
+          <span class="lbl">RALLY</span><span id="ro-rally" class="val">0</span>
+        </div>
+        <div class="readout">
+          <span class="lbl">HIT %</span><span id="ro-hitrate" class="val">--</span>
+        </div>
+        <div class="readout">
+          <span class="lbl">⟨W⟩</span><span id="ro-weight" class="val">--</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button
+          id="btn-theme"
+          class="icon-btn"
+          type="button"
+          aria-label="Toggle light or dark theme"
+          title="Theme (T)"
+        >
+          ◐
+        </button>
+        <button
+          id="btn-help"
+          class="icon-btn"
+          type="button"
+          aria-label="What is this?"
+          title="What is this? (?)"
+        >
+          ?
+        </button>
+      </div>
+    </header>
+
+    <nav class="controls" aria-label="Simulation controls">
+      <div class="seg" role="radiogroup" aria-label="Feedback after a miss">
+        <span class="ctl-label" id="mode-label">Feedback</span>
+        <button
+          type="button"
+          role="radio"
+          class="seg-btn"
+          data-mode="predictable"
+          aria-checked="true"
+          title="Predictable (1)"
+        >
+          <span class="dot dot-predictable" aria-hidden="true"></span>Predictable
+        </button>
+        <button
+          type="button"
+          role="radio"
+          class="seg-btn"
+          data-mode="unpredictable"
+          aria-checked="false"
+          title="Unpredictable (2)"
+        >
+          <span class="dot dot-unpredictable" aria-hidden="true"></span>Unpredictable
+        </button>
+        <button
+          type="button"
+          role="radio"
+          class="seg-btn"
+          data-mode="silent"
+          aria-checked="false"
+          title="Silent (3)"
+        >
+          <span class="dot dot-silent" aria-hidden="true"></span>Silent
+        </button>
+      </div>
+      <div class="transport">
+        <button
+          id="btn-play"
+          type="button"
+          class="btn"
+          aria-label="Pause"
+          title="Pause / resume (Space)"
+        >
+          ❚❚
+        </button>
+        <button
+          id="btn-step"
+          type="button"
+          class="btn"
+          aria-label="Step 100 milliseconds"
+          title="Step 100 ms (S)"
+        >
+          ⇥ 100ms
+        </button>
+        <label class="speed">
+          <span class="ctl-label">Speed</span>
+          <input
+            id="speed"
+            type="range"
+            min="0"
+            max="6"
+            step="1"
+            value="0"
+            aria-label="Simulation speed"
+            aria-valuetext="1x"
+          />
+          <output id="speed-out" for="speed">1×</output>
+        </label>
+        <button
+          id="btn-plastic"
+          type="button"
+          class="btn toggle"
+          aria-pressed="true"
+          title="Toggle STDP (P)"
+        >
+          STDP on
+        </button>
+        <button id="btn-reset" type="button" class="btn" title="Restart with a new culture (R)">
+          Reset
+        </button>
+      </div>
+    </nav>
+
+    <main id="main" class="grid">
+      <section class="panel panel-game" aria-labelledby="h-game">
+        <header class="panel-head">
+          <h2 id="h-game">Game</h2>
+          <span id="game-status" class="tag" role="status">PLAYING</span>
+        </header>
+        <canvas
+          id="cv-game"
+          class="cv cv-game"
+          role="img"
+          aria-label="Pong field. The paddle on the left is moved by the motor regions of the simulated culture."
+        ></canvas>
+        <div class="motor">
+          <span class="ctl-label">Motor</span>
+          <div class="motor-bar" aria-hidden="true">
+            <span id="motor-up" class="motor-up"></span
+            ><span id="motor-down" class="motor-down"></span>
+          </div>
+          <span id="motor-txt" class="mono small">up 0.0 Hz · down 0.0 Hz</span>
+        </div>
+      </section>
+
+      <section class="panel panel-mea" aria-labelledby="h-mea">
+        <header class="panel-head">
+          <h2 id="h-mea">MEA · 8×8</h2>
+          <span class="legend">
+            <i class="sw sw-sensory"></i>sensory <i class="sw sw-up"></i>up
+            <i class="sw sw-down"></i>down
+          </span>
+        </header>
+        <canvas
+          id="cv-mea"
+          class="cv cv-square"
+          role="img"
+          aria-label="Heatmap of firing rate on each of the 64 electrodes"
+        ></canvas>
+      </section>
+
+      <section class="panel panel-brain" aria-labelledby="h-brain">
+        <header class="panel-head">
+          <h2 id="h-brain">Culture</h2>
+          <span class="legend"><i class="sw sw-exc"></i>exc <i class="sw sw-inh"></i>inh</span>
+        </header>
+        <canvas
+          id="cv-brain"
+          class="cv cv-square"
+          role="img"
+          aria-label="Spatial layout of the neurons, brightness shows recent firing"
+        ></canvas>
+      </section>
+
+      <section class="panel panel-raster" aria-labelledby="h-raster">
+        <header class="panel-head">
+          <h2 id="h-raster">Spike raster</h2>
+          <span class="legend mono small">last 2 s sim time · grouped by electrode role</span>
+        </header>
+        <canvas
+          id="cv-raster"
+          class="cv cv-raster"
+          role="img"
+          aria-label="Spike raster of all neurons over the last two seconds"
+        ></canvas>
+      </section>
+
+      <section class="panel panel-rally" aria-labelledby="h-rally">
+        <header class="panel-head">
+          <h2 id="h-rally">Rally length</h2>
+          <span class="legend mono small">dots = rallies · line = moving mean (10)</span>
+        </header>
+        <canvas
+          id="cv-rally"
+          class="cv cv-chart"
+          role="img"
+          aria-label="Rally length over simulated time, coloured by feedback mode"
+        ></canvas>
+      </section>
+
+      <section class="panel panel-weights" aria-labelledby="h-weights">
+        <header class="panel-head">
+          <h2 id="h-weights">E→E weights</h2>
+          <span class="legend mono small">histogram over time · 0 → w<sub>max</sub></span>
+        </header>
+        <canvas
+          id="cv-weights"
+          class="cv cv-chart"
+          role="img"
+          aria-label="Distribution of excitatory synaptic weights over time"
+        ></canvas>
+      </section>
+    </main>
+
+    <section class="wide panel" aria-labelledby="h-params">
+      <details id="params-details">
+        <summary>
+          <h2 id="h-params">Parameters</h2>
+          <span class="mono small dim">changes apply on restart</span>
+        </summary>
+        <form id="params" class="params" autocomplete="off"></form>
+      </details>
+    </section>
+
+    <section class="wide panel" aria-labelledby="h-exp">
+      <header class="panel-head">
+        <h2 id="h-exp">Run experiment</h2>
+        <span class="mono small dim"
+          >headless, N paired seeds per condition, uses current parameters</span
+        >
+      </header>
+      <form id="exp-form" class="exp-form">
+        <label>Seeds <input id="exp-seeds" type="number" min="2" max="40" value="6" /></label>
+        <label
+          >Sim minutes <input id="exp-minutes" type="number" min="1" max="60" value="10"
+        /></label>
+        <label>Bin (s) <input id="exp-bin" type="number" min="10" max="600" value="60" /></label>
+        <fieldset class="exp-modes">
+          <legend class="sr-only">Conditions</legend>
+          <label
+            ><input type="checkbox" name="mode" value="predictable" checked /> predictable</label
+          >
+          <label
+            ><input type="checkbox" name="mode" value="unpredictable" checked />
+            unpredictable</label
+          >
+          <label><input type="checkbox" name="mode" value="silent" checked /> silent</label>
+        </fieldset>
+        <button id="exp-run" class="btn primary" type="submit">Run</button>
+        <button id="exp-cancel" class="btn" type="button" disabled>Cancel</button>
+        <button id="exp-csv" class="btn" type="button" disabled>CSV</button>
+        <button id="exp-json" class="btn" type="button" disabled>JSON</button>
+      </form>
+      <div class="progress" aria-live="polite">
+        <div class="progress-bar"><span id="exp-bar"></span></div>
+        <span id="exp-status" class="mono small">idle</span>
+      </div>
+      <div class="exp-results">
+        <canvas
+          id="cv-exp"
+          class="cv cv-exp"
+          role="img"
+          aria-label="Mean learning curves per condition with 95% confidence bands"
+        ></canvas>
+        <div id="exp-table" class="exp-table"></div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <p>
+        A simulation inspired by Kagan et al. (2022), <i>Neuron</i> 110(23):3952–3969. No real
+        neurons were harmed.
+        <a href="https://github.com/veermshah/dishbrain-playground">Source on GitHub</a>.
+      </p>
+      <p class="dim small mono">
+        Keys: Space pause · S step · 1/2/3 mode · +/− speed · P STDP · R reset · T theme · ? help
+      </p>
+    </footer>
+
+    <dialog id="help" aria-labelledby="help-title">
+      <div class="help-body">
+        <header class="panel-head">
+          <h2 id="help-title">What is this?</h2>
+          <button class="icon-btn" type="button" data-close aria-label="Close">✕</button>
+        </header>
+        <div class="help-cols">
+          <div>
+            <h3>DishBrain</h3>
+            <p>
+              In 2022 Brett Kagan and colleagues at Cortical Labs grew about 800,000 human and mouse
+              neurons on a high-density multi-electrode array and wired them into a game of Pong.
+              Electrical stimulation told the culture where the ball was; activity in "motor"
+              regions moved the paddle. Over a 20-minute session, cultures that received feedback
+              rallied longer in the later minutes than in the first five, and longer than cultures
+              without feedback.
+            </p>
+            <h3>The free-energy idea</h3>
+            <p>
+              The feedback was not a reward. After a miss, the culture got
+              <em>unpredictable</em> stimulation (random sites, 5 Hz, 4 s). After a hit it got a
+              short <em>predictable</em> burst. The hypothesis, from Karl Friston's free-energy
+              principle, is that a self-organising network acts to make its inputs predictable, so
+              it should drift towards behaviour that avoids the chaotic noise.
+            </p>
+            <h3>This simulation</h3>
+            <p>
+              1000 Izhikevich neurons (80% excitatory, 20% inhibitory), sparse random wiring, delays
+              up to 10 ms and spike-timing-dependent plasticity on excitatory synapses. Each neuron
+              sits under one of 64 virtual electrodes. Two central columns are sensory: the row
+              encodes where the ball is relative to the paddle (place code) and the pulse rate
+              encodes how close it is (4–40 Hz). Columns 0–1 push the paddle up, columns 6–7 push it
+              down.
+            </p>
+          </div>
+          <div>
+            <h3>Controls</h3>
+            <dl class="defs">
+              <dt>Predictable</dt>
+              <dd>After a miss, all 16 sensory electrodes pulse together at 100 Hz for 100 ms.</dd>
+              <dt>Unpredictable</dt>
+              <dd>
+                After a miss, random subsets of sensory electrodes pulse at random times (5 Hz, 2×
+                amplitude) for the whole 2 s pause.
+              </dd>
+              <dt>Silent</dt>
+              <dd>After a miss, the game pauses for 2 s with no stimulation at all.</dd>
+              <dt>STDP</dt>
+              <dd>Turns plasticity on or off. With it off, nothing can be learned.</dd>
+              <dt>Speed</dt>
+              <dd>1× is real time. The model usually runs faster than 50× real time.</dd>
+              <dt>Run experiment</dt>
+              <dd>
+                Runs every condition for N seeds in background workers, then plots mean rally length
+                with 95% confidence bands and Mann-Whitney U tests.
+              </dd>
+            </dl>
+            <h3>Honest caveat</h3>
+            <p>
+              This is a toy model, not a culture. In my runs, plain STDP does not produce the
+              learning effect seen in the paper; see the README for the numbers and why I think that
+              is.
+            </p>
+            <h3>References</h3>
+            <ol class="refs">
+              <li>
+                Kagan BJ et al. (2022). In vitro neurons learn and exhibit sentience when embodied
+                in a simulated game-world. <i>Neuron</i> 110(23), 3952–3969.
+              </li>
+              <li>
+                Izhikevich EM (2003). Simple model of spiking neurons.
+                <i>IEEE Trans. Neural Networks</i> 14(6), 1569–1572.
+              </li>
+              <li>
+                Izhikevich EM (2006). Polychronization: computation with spikes.
+                <i>Neural Computation</i> 18(2), 245–282.
+              </li>
+              <li>
+                Bi G, Poo M (1998). Synaptic modifications in cultured hippocampal neurons.
+                <i>J. Neuroscience</i> 18(24), 10464–10472.
+              </li>
+              <li>
+                Friston K (2010). The free-energy principle: a unified brain theory?
+                <i>Nat. Rev. Neuroscience</i> 11, 127–138.
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
