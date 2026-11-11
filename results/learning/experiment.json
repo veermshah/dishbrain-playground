@@ -1,0 +1,4405 @@
+{
+  "options": {
+    "seeds": 12,
+    "minutes": 20,
+    "binSeconds": 120,
+    "preset": "dishbrain",
+    "modes": [
+      "dishbrain",
+      "predictable",
+      "unpredictable",
+      "silent",
+      "avoidance"
+    ],
+    "conditions": [
+      "dishbrain=dishbrain:learningRig",
+      "silent=silent:learningRig",
+      "avoidance=avoidance:learningRig",
+      "avoidance-no-stdp=avoidance:learningRig+noPlasticity",
+      "rstdp=silent:learningRig+rstdp",
+      "rstdp-shuffled=silent:learningRig+rstdpShuffled"
+    ],
+    "seedStart": 1,
+    "out": "results/learning",
+    "threads": 17
+  },
+  "conditions": [
+    {
+      "label": "dishbrain",
+      "mode": "dishbrain",
+      "config": {
+        "network": {
+          "nNeurons": 1000,
+          "excFraction": 0.8,
+          "connectionProb": 0.1,
+          "wExc": 6,
+          "wInh": -5,
+          "wMax": 10,
+          "maxDelay": 10,
+          "aPlus": 0.15,
+          "aMinus": 0.18,
+          "tauStdp": 40,
+          "noiseRate": 0.0025,
+          "noiseAmp": 20,
+          "plastic": true,
+          "rule": "stdp",
+          "tauElig": 1000,
+          "rewardLr": 1
+        },
+        "pong": {
+          "paddleHeight": 0.22,
+          "ballRadius": 0.015,
+          "ballSpeed": 0.55,
+          "paddleSpeed": 0.9,
+          "maxBounceAngle": 0.9599310885968813
+        },
+        "encoder": {
+          "placeSpan": 1,
+          "rateMinHz": 4,
+          "rateMaxHz": 40
+        },
+        "decoder": {
+          "tauMs": 100,
+          "fullScaleHz": 4,
+          "baselineTauMs": 10000
+        },
+        "stim": {
+          "amp": 18,
+          "durMs": 2
+        },
+        "feedback": {
+          "windowMs": 4000,
+          "strength": 1,
+          "predictableHz": 100,
+          "predictableMs": 100,
+          "unpredictableHz": 5,
+          "unpredictableFraction": 0.5,
+          "unpredictableGain": 2
+        },
+        "avoidance": {
+          "rateHz": 200,
+          "gain": 2,
+          "decodeTauMs": 5,
+          "threshold": 0.05,
+          "alignFrac": 0.5,
+          "maxMs": 1500
+        },
+        "reward": {
+          "mode": "none",
+          "hit": 1,
+          "miss": -1,
+          "baselineEvents": 0
+        },
+        "mode": "dishbrain"
+      }
+    },
+    {
+      "label": "silent",
+      "mode": "silent",
+      "config": {
+        "network": {
+          "nNeurons": 1000,
+          "excFraction": 0.8,
+          "connectionProb": 0.1,
+          "wExc": 6,
+          "wInh": -5,
+          "wMax": 10,
+          "maxDelay": 10,
+          "aPlus": 0.15,
+          "aMinus": 0.18,
+          "tauStdp": 40,
+          "noiseRate": 0.0025,
+          "noiseAmp": 20,
+          "plastic": true,
+          "rule": "stdp",
+          "tauElig": 1000,
+          "rewardLr": 1
+        },
+        "pong": {
+          "paddleHeight": 0.22,
+          "ballRadius": 0.015,
+          "ballSpeed": 0.55,
+          "paddleSpeed": 0.9,
+          "maxBounceAngle": 0.9599310885968813
+        },
+        "encoder": {
+          "placeSpan": 1,
+          "rateMinHz": 4,
+          "rateMaxHz": 40
+        },
+        "decoder": {
+          "tauMs": 100,
+          "fullScaleHz": 4,
+          "baselineTauMs": 10000
+        },
+        "stim": {
+          "amp": 18,
+          "durMs": 2
+        },
+        "feedback": {
+          "windowMs": 4000,
+          "strength": 1,
+          "predictableHz": 100,
+          "predictableMs": 100,
+          "unpredictableHz": 5,
+          "unpredictableFraction": 0.5,
+          "unpredictableGain": 2
+        },
+        "avoidance": {
+          "rateHz": 200,
+          "gain": 2,
+          "decodeTauMs": 5,
+          "threshold": 0.05,
+          "alignFrac": 0.5,
+          "maxMs": 1500
+        },
+        "reward": {
+          "mode": "none",
+          "hit": 1,
+          "miss": -1,
+          "baselineEvents": 0
+        },
+        "mode": "dishbrain"
+      }
+    },
+    {
+      "label": "avoidance",
+      "mode": "avoidance",
+      "config": {
+        "network": {
+          "nNeurons": 1000,
+          "excFraction": 0.8,
+          "connectionProb": 0.1,
+          "wExc": 6,
+          "wInh": -5,
+          "wMax": 10,
+          "maxDelay": 10,
+          "aPlus": 0.15,
+          "aMinus": 0.18,
+          "tauStdp": 40,
+          "noiseRate": 0.0025,
+          "noiseAmp": 20,
+          "plastic": true,
+          "rule": "stdp",
+          "tauElig": 1000,
+          "rewardLr": 1
+        },
+        "pong": {
+          "paddleHeight": 0.22,
+          "ballRadius": 0.015,
+          "ballSpeed": 0.55,
+          "paddleSpeed": 0.9,
+          "maxBounceAngle": 0.9599310885968813
+        },
+        "encoder": {
+          "placeSpan": 1,
+          "rateMinHz": 4,
+          "rateMaxHz": 40
+        },
+        "decoder": {
+          "tauMs": 100,
+          "fullScaleHz": 4,
+          "baselineTauMs": 10000
+        },
+        "stim": {
+          "amp": 18,
+          "durMs": 2
+        },
+        "feedback": {
+          "windowMs": 4000,
+          "strength": 1,
+          "predictableHz": 100,
+          "predictableMs": 100,
+          "unpredictableHz": 5,
+          "unpredictableFraction": 0.5,
+          "unpredictableGain": 2
+        },
+        "avoidance": {
+          "rateHz": 200,
+          "gain": 2,
+          "decodeTauMs": 5,
+          "threshold": 0.05,
+          "alignFrac": 0.5,
+          "maxMs": 1500
+        },
+        "reward": {
+          "mode": "none",
+          "hit": 1,
+          "miss": -1,
+          "baselineEvents": 0
+        },
+        "mode": "dishbrain"
+      }
+    },
+    {
+      "label": "avoidance-no-stdp",
+      "mode": "avoidance",
+      "config": {
+        "network": {
+          "nNeurons": 1000,
+          "excFraction": 0.8,
+          "connectionProb": 0.1,
+          "wExc": 6,
+          "wInh": -5,
+          "wMax": 10,
+          "maxDelay": 10,
+          "aPlus": 0.15,
+          "aMinus": 0.18,
+          "tauStdp": 40,
+          "noiseRate": 0.0025,
+          "noiseAmp": 20,
+          "plastic": false,
+          "rule": "stdp",
+          "tauElig": 1000,
+          "rewardLr": 1
+        },
+        "pong": {
+          "paddleHeight": 0.22,
+          "ballRadius": 0.015,
+          "ballSpeed": 0.55,
+          "paddleSpeed": 0.9,
+          "maxBounceAngle": 0.9599310885968813
+        },
+        "encoder": {
+          "placeSpan": 1,
+          "rateMinHz": 4,
+          "rateMaxHz": 40
+        },
+        "decoder": {
+          "tauMs": 100,
+          "fullScaleHz": 4,
+          "baselineTauMs": 10000
+        },
+        "stim": {
+          "amp": 18,
+          "durMs": 2
+        },
+        "feedback": {
+          "windowMs": 4000,
+          "strength": 1,
+          "predictableHz": 100,
+          "predictableMs": 100,
+          "unpredictableHz": 5,
+          "unpredictableFraction": 0.5,
+          "unpredictableGain": 2
+        },
+        "avoidance": {
+          "rateHz": 200,
+          "gain": 2,
+          "decodeTauMs": 5,
+          "threshold": 0.05,
+          "alignFrac": 0.5,
+          "maxMs": 1500
+        },
+        "reward": {
+          "mode": "none",
+          "hit": 1,
+          "miss": -1,
+          "baselineEvents": 0
+        },
+        "mode": "dishbrain"
+      }
+    },
+    {
+      "label": "rstdp",
+      "mode": "silent",
+      "config": {
+        "network": {
+          "nNeurons": 1000,
+          "excFraction": 0.8,
+          "connectionProb": 0.1,
+          "wExc": 6,
+          "wInh": -5,
+          "wMax": 10,
+          "maxDelay": 10,
+          "aPlus": 0.15,
+          "aMinus": 0.18,
+          "tauStdp": 40,
+          "noiseRate": 0.0025,
+          "noiseAmp": 20,
+          "plastic": true,
+          "rule": "rstdp",
+          "tauElig": 1000,
+          "rewardLr": 1
+        },
+        "pong": {
+          "paddleHeight": 0.22,
+          "ballRadius": 0.015,
+          "ballSpeed": 0.55,
+          "paddleSpeed": 0.9,
+          "maxBounceAngle": 0.9599310885968813
+        },
+        "encoder": {
+          "placeSpan": 1,
+          "rateMinHz": 4,
+          "rateMaxHz": 40
+        },
+        "decoder": {
+          "tauMs": 100,
+          "fullScaleHz": 4,
+          "baselineTauMs": 10000
+        },
+        "stim": {
+          "amp": 18,
+          "durMs": 2
+        },
+        "feedback": {
+          "windowMs": 4000,
+          "strength": 1,
+          "predictableHz": 100,
+          "predictableMs": 100,
+          "unpredictableHz": 5,
+          "unpredictableFraction": 0.5,
+          "unpredictableGain": 2
+        },
+        "avoidance": {
+          "rateHz": 200,
+          "gain": 2,
+          "decodeTauMs": 5,
+          "threshold": 0.05,
+          "alignFrac": 0.5,
+          "maxMs": 1500
+        },
+        "reward": {
+          "mode": "contingent",
+          "hit": 1,
+          "miss": -1,
+          "baselineEvents": 20
+        },
+        "mode": "dishbrain"
+      }
+    },
+    {
+      "label": "rstdp-shuffled",
+      "mode": "silent",
+      "config": {
+        "network": {
+          "nNeurons": 1000,
+          "excFraction": 0.8,
+          "connectionProb": 0.1,
+          "wExc": 6,
+          "wInh": -5,
+          "wMax": 10,
+          "maxDelay": 10,
+          "aPlus": 0.15,
+          "aMinus": 0.18,
+          "tauStdp": 40,
+          "noiseRate": 0.0025,
+          "noiseAmp": 20,
+          "plastic": true,
+          "rule": "rstdp",
+          "tauElig": 1000,
+          "rewardLr": 1
+        },
+        "pong": {
+          "paddleHeight": 0.22,
+          "ballRadius": 0.015,
+          "ballSpeed": 0.55,
+          "paddleSpeed": 0.9,
+          "maxBounceAngle": 0.9599310885968813
+        },
+        "encoder": {
+          "placeSpan": 1,
+          "rateMinHz": 4,
+          "rateMaxHz": 40
+        },
+        "decoder": {
+          "tauMs": 100,
+          "fullScaleHz": 4,
+          "baselineTauMs": 10000
+        },
+        "stim": {
+          "amp": 18,
+          "durMs": 2
+        },
+        "feedback": {
+          "windowMs": 4000,
+          "strength": 1,
+          "predictableHz": 100,
+          "predictableMs": 100,
+          "unpredictableHz": 5,
+          "unpredictableFraction": 0.5,
+          "unpredictableGain": 2
+        },
+        "avoidance": {
+          "rateHz": 200,
+          "gain": 2,
+          "decodeTauMs": 5,
+          "threshold": 0.05,
+          "alignFrac": 0.5,
+          "maxMs": 1500
+        },
+        "reward": {
+          "mode": "shuffled",
+          "hit": 1,
+          "miss": -1,
+          "baselineEvents": 20
+        },
+        "mode": "dishbrain"
+      }
+    }
+  ],
+  "wallSeconds": 1193.234887625,
+  "summary": {
+    "conditions": [
+      {
+        "condition": "dishbrain",
+        "mode": "dishbrain",
+        "seeds": 12,
+        "curve": [
+          {
+            "mean": 0.2954570863433093,
+            "lo": 0.21879205602048674,
+            "hi": 0.3721221166661319,
+            "n": 12
+          },
+          {
+            "mean": 0.3739975331113102,
+            "lo": 0.23383899887495427,
+            "hi": 0.5141560673476661,
+            "n": 12
+          },
+          {
+            "mean": 0.30191491801398923,
+            "lo": 0.20021719981755337,
+            "hi": 0.4036126362104251,
+            "n": 12
+          },
+          {
+            "mean": 0.36039320980303957,
+            "lo": 0.22296110859912385,
+            "hi": 0.49782531100695526,
+            "n": 12
+          },
+          {
+            "mean": 0.32004106467148263,
+            "lo": 0.25549227174962275,
+            "hi": 0.3845898575933425,
+            "n": 12
+          },
+          {
+            "mean": 0.44690548565355065,
+            "lo": 0.2991579094611698,
+            "hi": 0.5946530618459315,
+            "n": 12
+          },
+          {
+            "mean": 0.34721756392615527,
+            "lo": 0.1928097197776966,
+            "hi": 0.501625408074614,
+            "n": 12
+          },
+          {
+            "mean": 0.3871745335561125,
+            "lo": 0.2818317881417882,
+            "hi": 0.49251727897043673,
+            "n": 12
+          },
+          {
+            "mean": 0.4430967123691581,
+            "lo": 0.3044955370635579,
+            "hi": 0.5816978876747583,
+            "n": 12
+          },
+          {
+            "mean": 0.2977152849443871,
+            "lo": 0.19401310708262615,
+            "hi": 0.40141746280614804,
+            "n": 12
+          }
+        ],
+        "meanRally": {
+          "mean": 0.3402119513160678,
+          "lo": 0.30333821326685395,
+          "hi": 0.37708568936528164,
+          "n": 12
+        },
+        "earlyRally": {
+          "mean": 0.32347652844487823,
+          "lo": 0.24900826339224286,
+          "hi": 0.3979447934975136,
+          "n": 12
+        },
+        "lateRally": {
+          "mean": 0.356957728113211,
+          "lo": 0.2988408378641694,
+          "hi": 0.4150746183622527,
+          "n": 12
+        },
+        "improvement": {
+          "mean": 0.03348119966833283,
+          "lo": -0.06536661844116462,
+          "hi": 0.1323290177778303,
+          "n": 12
+        },
+        "mappingEnd": {
+          "mean": -0.03554728666521201,
+          "lo": -0.1531926388866837,
+          "hi": 0.08209806555625968,
+          "n": 12
+        },
+        "steeringLate": {
+          "mean": -0.06552204389101783,
+          "lo": -0.1529467676923571,
+          "hi": 0.02190267991032145,
+          "n": 12
+        }
+      },
+      {
+        "condition": "silent",
+        "mode": "silent",
+        "seeds": 12,
+        "curve": [
+          {
+            "mean": 0.32404074934067195,
+            "lo": 0.2463782147828954,
+            "hi": 0.4017032838984485,
+            "n": 12
+          },
+          {
+            "mean": 0.3747407813777783,
+            "lo": 0.23994992642547142,
+            "hi": 0.5095316363300851,
+            "n": 12
+          },
+          {
+            "mean": 0.3406267916523334,
+            "lo": 0.23835431701127896,
+            "hi": 0.4428992662933878,
+            "n": 12
+          },
+          {
+            "mean": 0.2798048532278409,
+            "lo": 0.20778092315164026,
+            "hi": 0.3518287833040415,
+            "n": 12
+          },
+          {
+            "mean": 0.34385678247907353,
+            "lo": 0.2369093223269037,
+            "hi": 0.45080424263124336,
+            "n": 12
+          },
+          {
+            "mean": 0.4464343559061051,
+            "lo": 0.3382588148507252,
+            "hi": 0.554609896961485,
+            "n": 12
+          },
+          {
+            "mean": 0.37600511695906436,
+            "lo": 0.21020238929337287,
+            "hi": 0.5418078446247558,
+            "n": 12
+          },
+          {
+            "mean": 0.37777040640817733,
+            "lo": 0.28187358064974705,
+            "hi": 0.4736672321666076,
+            "n": 12
+          },
+          {
+            "mean": 0.3912599103969073,
+            "lo": 0.29633005056487804,
+            "hi": 0.4861897702289365,
+            "n": 12
+          },
+          {
+            "mean": 0.3666112278244631,
+            "lo": 0.28143996180293096,
+            "hi": 0.4517824938459952,
+            "n": 12
+          }
+        ],
+        "meanRally": {
+          "mean": 0.3487070174958862,
+          "lo": 0.31413209486125315,
+          "hi": 0.3832819401305192,
+          "n": 12
+        },
+        "earlyRally": {
+          "mean": 0.33321083789345246,
+          "lo": 0.27687621611529223,
+          "hi": 0.3895454596716127,
+          "n": 12
+        },
+        "lateRally": {
+          "mean": 0.3635125857360281,
+          "lo": 0.3108464694735655,
+          "hi": 0.4161787019984908,
+          "n": 12
+        },
+        "improvement": {
+          "mean": 0.030301747842575628,
+          "lo": -0.04442476910918136,
+          "hi": 0.10502826479433261,
+          "n": 12
+        },
+        "mappingEnd": {
+          "mean": -0.08168509157576069,
+          "lo": -0.2565668362898441,
+          "hi": 0.09319665313832272,
+          "n": 12
+        },
+        "steeringLate": {
+          "mean": -0.1883658735866243,
+          "lo": -0.2924754375164011,
+          "hi": -0.0842563096568475,
+          "n": 12
+        }
+      },
+      {
+        "condition": "avoidance",
+        "mode": "avoidance",
+        "seeds": 12,
+        "curve": [
+          {
+            "mean": 0.36526416122004357,
+            "lo": 0.2146077130618237,
+            "hi": 0.5159206093782635,
+            "n": 12
+          },
+          {
+            "mean": 0.4921598002673854,
+            "lo": 0.325293300372804,
+            "hi": 0.6590263001619668,
+            "n": 12
+          },
+          {
+            "mean": 0.3835697755976394,
+            "lo": 0.20694525457136442,
+            "hi": 0.5601942966239144,
+            "n": 11
+          },
+          {
+            "mean": 6.522055700935346,
+            "lo": -6.980156765217294,
+            "hi": 20.024268167087985,
+            "n": 12
+          },
+          {
+            "mean": 2.2529813420583547,
+            "lo": -1.30914008050319,
+            "hi": 5.815102764619899,
+            "n": 12
+          },
+          {
+            "mean": 0.6753886578963978,
+            "lo": 0.3642257884572599,
+            "hi": 0.9865515273355356,
+            "n": 12
+          },
+          {
+            "mean": 0.6906210347386817,
+            "lo": 0.1946145555693523,
+            "hi": 1.1866275139080111,
+            "n": 12
+          },
+          {
+            "mean": 1.2004817078346488,
+            "lo": -0.17064869743624334,
+            "hi": 2.571612113105541,
+            "n": 12
+          },
+          {
+            "mean": 0.9076027404684526,
+            "lo": 0.09710940575627014,
+            "hi": 1.7180960751806351,
+            "n": 12
+          },
+          {
+            "mean": 0.7512259390935861,
+            "lo": 0.3709466359401594,
+            "hi": 1.1315052422470129,
+            "n": 12
+          }
+        ],
+        "meanRally": {
+          "mean": 0.8003495208684835,
+          "lo": 0.061989411469902,
+          "hi": 1.538709630267065,
+          "n": 12
+        },
+        "earlyRally": {
+          "mean": 0.41994292372541686,
+          "lo": 0.29997362368803415,
+          "hi": 0.5399122237627996,
+          "n": 12
+        },
+        "lateRally": {
+          "mean": 0.8244246991773995,
+          "lo": 0.21756197917371345,
+          "hi": 1.4312874191810856,
+          "n": 12
+        },
+        "improvement": {
+          "mean": 0.40448177545198255,
+          "lo": -0.1047174262665646,
+          "hi": 0.9136809771705297,
+          "n": 12
+        },
+        "mappingEnd": {
+          "mean": 0.7483413777308666,
+          "lo": 0.5223342717697561,
+          "hi": 0.9743484836919771,
+          "n": 12
+        },
+        "steeringLate": {
+          "mean": 0.32243993409933513,
+          "lo": 0.12990512442381041,
+          "hi": 0.5149747437748599,
+          "n": 12
+        }
+      },
+      {
+        "condition": "avoidance-no-stdp",
+        "mode": "avoidance",
+        "seeds": 12,
+        "curve": [
+          {
+            "mean": 0.3141823615411077,
+            "lo": 0.22008982690890136,
+            "hi": 0.40827489617331403,
+            "n": 12
+          },
+          {
+            "mean": 0.48325931249692866,
+            "lo": 0.31933447515268804,
+            "hi": 0.6471841498411692,
+            "n": 12
+          },
+          {
+            "mean": 0.4846599751011516,
+            "lo": 0.35285618284899734,
+            "hi": 0.6164637673533059,
+            "n": 12
+          },
+          {
+            "mean": 0.3931233390792215,
+            "lo": 0.2724327630966281,
+            "hi": 0.5138139150618148,
+            "n": 12
+          },
+          {
+            "mean": 0.39107501975149034,
+            "lo": 0.290265496109455,
+            "hi": 0.49188454339352566,
+            "n": 12
+          },
+          {
+            "mean": 0.46877376006632976,
+            "lo": 0.2627858088083307,
+            "hi": 0.6747617113243288,
+            "n": 12
+          },
+          {
+            "mean": 0.36799202868281816,
+            "lo": 0.2340055124318419,
+            "hi": 0.5019785449337945,
+            "n": 12
+          },
+          {
+            "mean": 0.3606499398004816,
+            "lo": 0.25882702023027004,
+            "hi": 0.46247285937069316,
+            "n": 12
+          },
+          {
+            "mean": 0.3835805577291646,
+            "lo": 0.2595410060215827,
+            "hi": 0.5076201094367465,
+            "n": 12
+          },
+          {
+            "mean": 0.3582427781053941,
+            "lo": 0.2533649971593177,
+            "hi": 0.46312055905147054,
+            "n": 12
+          }
+        ],
+        "meanRally": {
+          "mean": 0.3793085374469192,
+          "lo": 0.3412949682484509,
+          "hi": 0.41732210664538755,
+          "n": 12
+        },
+        "earlyRally": {
+          "mean": 0.4015360403030266,
+          "lo": 0.3242892714613632,
+          "hi": 0.47878280914468996,
+          "n": 12
+        },
+        "lateRally": {
+          "mean": 0.3560740183561457,
+          "lo": 0.30818573525642695,
+          "hi": 0.4039623014558645,
+          "n": 12
+        },
+        "improvement": {
+          "mean": -0.045462021946880905,
+          "lo": -0.1488984868331284,
+          "hi": 0.05797444293936659,
+          "n": 12
+        },
+        "mappingEnd": {
+          "mean": 0.011697249374138222,
+          "lo": -0.008598777746293725,
+          "hi": 0.03199327649457017,
+          "n": 12
+        },
+        "steeringLate": {
+          "mean": 0.048795270370670996,
+          "lo": -0.043934722028366,
+          "hi": 0.141525262769708,
+          "n": 12
+        }
+      },
+      {
+        "condition": "rstdp",
+        "mode": "silent",
+        "seeds": 12,
+        "curve": [
+          {
+            "mean": 0.33420285568118385,
+            "lo": 0.21526879971460938,
+            "hi": 0.4531369116477583,
+            "n": 12
+          },
+          {
+            "mean": 0.3549772101823186,
+            "lo": 0.26114785547861386,
+            "hi": 0.44880656488602333,
+            "n": 12
+          },
+          {
+            "mean": 0.3288699690402477,
+            "lo": 0.24587103998527915,
+            "hi": 0.4118688980952162,
+            "n": 12
+          },
+          {
+            "mean": 0.29039495184038533,
+            "lo": 0.1854645291392128,
+            "hi": 0.39532537454155786,
+            "n": 12
+          },
+          {
+            "mean": 0.4459821428571428,
+            "lo": 0.3441665090209487,
+            "hi": 0.547797776693337,
+            "n": 12
+          },
+          {
+            "mean": 0.41001497821350763,
+            "lo": 0.3291637046820749,
+            "hi": 0.49086625174494036,
+            "n": 12
+          },
+          {
+            "mean": 0.317876031991744,
+            "lo": 0.19967270692518152,
+            "hi": 0.4360793570583065,
+            "n": 12
+          },
+          {
+            "mean": 0.36305577055383553,
+            "lo": 0.2716132257021797,
+            "hi": 0.45449831540549135,
+            "n": 12
+          },
+          {
+            "mean": 0.3220849816534801,
+            "lo": 0.2127893201775823,
+            "hi": 0.4313806431293779,
+            "n": 12
+          },
+          {
+            "mean": 0.33008911166805904,
+            "lo": 0.21819145169533644,
+            "hi": 0.44198677164078165,
+            "n": 12
+          }
+        ],
+        "meanRally": {
+          "mean": 0.3361813468271526,
+          "lo": 0.3112046927304735,
+          "hi": 0.3611580009238317,
+          "n": 12
+        },
+        "earlyRally": {
+          "mean": 0.32504190613945155,
+          "lo": 0.29055796286257973,
+          "hi": 0.3595258494163234,
+          "n": 12
+        },
+        "lateRally": {
+          "mean": 0.31521122708655236,
+          "lo": 0.27445204209396573,
+          "hi": 0.355970412079139,
+          "n": 12
+        },
+        "improvement": {
+          "mean": -0.009830679052899194,
+          "lo": -0.07985391875918502,
+          "hi": 0.06019256065338663,
+          "n": 12
+        },
+        "mappingEnd": {
+          "mean": -0.06325832250673866,
+          "lo": -0.1292869528419477,
+          "hi": 0.0027703078284703614,
+          "n": 12
+        },
+        "steeringLate": {
+          "mean": -0.2611224704192634,
+          "lo": -0.3951037932324578,
+          "hi": -0.12714114760606895,
+          "n": 12
+        }
+      },
+      {
+        "condition": "rstdp-shuffled",
+        "mode": "silent",
+        "seeds": 12,
+        "curve": [
+          {
+            "mean": 0.44875116713352003,
+            "lo": 0.3001943754795622,
+            "hi": 0.5973079587874779,
+            "n": 12
+          },
+          {
+            "mean": 0.3348626877651646,
+            "lo": 0.248441176880411,
+            "hi": 0.4212841986499182,
+            "n": 12
+          },
+          {
+            "mean": 0.37674721935557853,
+            "lo": 0.25884192241023474,
+            "hi": 0.49465251630092233,
+            "n": 12
+          },
+          {
+            "mean": 0.3224892886754342,
+            "lo": 0.20585318727392038,
+            "hi": 0.439125390076948,
+            "n": 12
+          },
+          {
+            "mean": 0.34413986354775833,
+            "lo": 0.2507006457003143,
+            "hi": 0.43757908139520235,
+            "n": 12
+          },
+          {
+            "mean": 0.31198436245843364,
+            "lo": 0.20399057614169563,
+            "hi": 0.41997814877517164,
+            "n": 12
+          },
+          {
+            "mean": 0.45848311546840964,
+            "lo": 0.30308549012093294,
+            "hi": 0.6138807408158864,
+            "n": 12
+          },
+          {
+            "mean": 0.4036184210526316,
+            "lo": 0.2803699899070038,
+            "hi": 0.5268668521982595,
+            "n": 12
+          },
+          {
+            "mean": 0.3613409033203925,
+            "lo": 0.2001713970500175,
+            "hi": 0.5225104095907674,
+            "n": 12
+          },
+          {
+            "mean": 0.32213729790161677,
+            "lo": 0.21367795872257517,
+            "hi": 0.4305966370806584,
+            "n": 12
+          }
+        ],
+        "meanRally": {
+          "mean": 0.3502065425375634,
+          "lo": 0.3182674419682678,
+          "hi": 0.382145643106859,
+          "n": 12
+        },
+        "earlyRally": {
+          "mean": 0.35558663639288257,
+          "lo": 0.29760378527094267,
+          "hi": 0.4135694875148225,
+          "n": 12
+        },
+        "lateRally": {
+          "mean": 0.346327240641076,
+          "lo": 0.2924602286188138,
+          "hi": 0.4001942526633382,
+          "n": 12
+        },
+        "improvement": {
+          "mean": -0.009259395751806556,
+          "lo": -0.09686430655908428,
+          "hi": 0.07834551505547117,
+          "n": 12
+        },
+        "mappingEnd": {
+          "mean": -0.0663656140600031,
+          "lo": -0.1301226776621525,
+          "hi": -0.0026085504578537144,
+          "n": 12
+        },
+        "steeringLate": {
+          "mean": -0.17042144195089995,
+          "lo": -0.28807249410683955,
+          "hi": -0.052770389794960376,
+          "n": 12
+        }
+      }
+    ],
+    "comparisons": [
+      {
+        "a": "dishbrain",
+        "b": "silent",
+        "metric": "lateRally",
+        "test": {
+          "u": 67,
+          "p": 0.794662847662563,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "silent",
+        "metric": "improvement",
+        "test": {
+          "u": 76,
+          "p": 0.8428359902313328,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "silent",
+        "metric": "steeringLate",
+        "test": {
+          "u": 102,
+          "p": 0.08873378606855521,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "silent",
+        "metric": "mappingEnd",
+        "test": {
+          "u": 74,
+          "p": 0.9323005033733262,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "avoidance",
+        "metric": "lateRally",
+        "test": {
+          "u": 23,
+          "p": 0.005079174128156394,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "avoidance",
+        "metric": "improvement",
+        "test": {
+          "u": 44,
+          "p": 0.1135023275284414,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "avoidance",
+        "metric": "steeringLate",
+        "test": {
+          "u": 18,
+          "p": 0.0011145806676833732,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "avoidance",
+        "metric": "mappingEnd",
+        "test": {
+          "u": 3,
+          "p": 0.000005177216107354753,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "avoidance-no-stdp",
+        "metric": "lateRally",
+        "test": {
+          "u": 74,
+          "p": 0.9309273790011772,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "avoidance-no-stdp",
+        "metric": "improvement",
+        "test": {
+          "u": 95,
+          "p": 0.1978081146206062,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "avoidance-no-stdp",
+        "metric": "steeringLate",
+        "test": {
+          "u": 34,
+          "p": 0.028420697622474442,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "avoidance-no-stdp",
+        "metric": "mappingEnd",
+        "test": {
+          "u": 64,
+          "p": 0.6706595329559389,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "rstdp",
+        "metric": "lateRally",
+        "test": {
+          "u": 90.5,
+          "p": 0.29796121603808334,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "rstdp",
+        "metric": "improvement",
+        "test": {
+          "u": 91,
+          "p": 0.2913426592252814,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "rstdp",
+        "metric": "steeringLate",
+        "test": {
+          "u": 113,
+          "p": 0.017271192934135458,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "rstdp",
+        "metric": "mappingEnd",
+        "test": {
+          "u": 75,
+          "p": 0.8873859348351204,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "rstdp-shuffled",
+        "metric": "lateRally",
+        "test": {
+          "u": 77.5,
+          "p": 0.7724449238564182,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "rstdp-shuffled",
+        "metric": "improvement",
+        "test": {
+          "u": 87.5,
+          "p": 0.38637288193899066,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "rstdp-shuffled",
+        "metric": "steeringLate",
+        "test": {
+          "u": 93,
+          "p": 0.2415237878288087,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "dishbrain",
+        "b": "rstdp-shuffled",
+        "metric": "mappingEnd",
+        "test": {
+          "u": 74,
+          "p": 0.9323005033733262,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "avoidance",
+        "metric": "lateRally",
+        "test": {
+          "u": 26,
+          "p": 0.00855789833321663,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "avoidance",
+        "metric": "improvement",
+        "test": {
+          "u": 38,
+          "p": 0.05186461136117887,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "avoidance",
+        "metric": "steeringLate",
+        "test": {
+          "u": 8,
+          "p": 0.0000495533541703955,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "avoidance",
+        "metric": "mappingEnd",
+        "test": {
+          "u": 4,
+          "p": 0.000008875227612608148,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "avoidance-no-stdp",
+        "metric": "lateRally",
+        "test": {
+          "u": 69.5,
+          "p": 0.9078928779324626,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "avoidance-no-stdp",
+        "metric": "improvement",
+        "test": {
+          "u": 93,
+          "p": 0.2415237878288087,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "avoidance-no-stdp",
+        "metric": "steeringLate",
+        "test": {
+          "u": 18,
+          "p": 0.0011145806676833732,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "avoidance-no-stdp",
+        "metric": "mappingEnd",
+        "test": {
+          "u": 52,
+          "p": 0.2656695841512102,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "rstdp",
+        "metric": "lateRally",
+        "test": {
+          "u": 92,
+          "p": 0.2586776825558781,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "rstdp",
+        "metric": "improvement",
+        "test": {
+          "u": 87,
+          "p": 0.40951039806875045,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "rstdp",
+        "metric": "steeringLate",
+        "test": {
+          "u": 90,
+          "p": 0.3185851703821821,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "rstdp",
+        "metric": "mappingEnd",
+        "test": {
+          "u": 76,
+          "p": 0.8428359902313328,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "rstdp-shuffled",
+        "metric": "lateRally",
+        "test": {
+          "u": 87.5,
+          "p": 0.3856486013973197,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "rstdp-shuffled",
+        "metric": "improvement",
+        "test": {
+          "u": 85,
+          "p": 0.4775752582321434,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "rstdp-shuffled",
+        "metric": "steeringLate",
+        "test": {
+          "u": 67,
+          "p": 0.7987453386564977,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "silent",
+        "b": "rstdp-shuffled",
+        "metric": "mappingEnd",
+        "test": {
+          "u": 76,
+          "p": 0.8428359902313328,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "avoidance",
+        "b": "avoidance-no-stdp",
+        "metric": "lateRally",
+        "test": {
+          "u": 126,
+          "p": 0.0020051031365597716,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "avoidance",
+        "b": "avoidance-no-stdp",
+        "metric": "improvement",
+        "test": {
+          "u": 117,
+          "p": 0.008293160601681265,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "avoidance",
+        "b": "avoidance-no-stdp",
+        "metric": "steeringLate",
+        "test": {
+          "u": 110,
+          "p": 0.028420697622474442,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "avoidance",
+        "b": "avoidance-no-stdp",
+        "metric": "mappingEnd",
+        "test": {
+          "u": 144,
+          "p": 7.39602301050679e-7,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "avoidance",
+        "b": "rstdp",
+        "metric": "lateRally",
+        "test": {
+          "u": 127.5,
+          "p": 0.0014856402549088266,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "avoidance",
+        "b": "rstdp",
+        "metric": "improvement",
+        "test": {
+          "u": 112,
+          "p": 0.02048920254600696,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "avoidance",
+        "b": "rstdp",
+        "metric": "steeringLate",
+        "test": {
+          "u": 138,
+          "p": 0.00002218806903152037,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "avoidance",
+        "b": "rstdp",
+        "metric": "mappingEnd",
+        "test": {
+          "u": 143,
+          "p": 0.000001479204602101358,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "avoidance",
+        "b": "rstdp-shuffled",
+        "metric": "lateRally",
+        "test": {
+          "u": 122,
+          "p": 0.004239887352396554,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "avoidance",
+        "b": "rstdp-shuffled",
+        "metric": "improvement",
+        "test": {
+          "u": 111,
+          "p": 0.024184255642056153,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "avoidance",
+        "b": "rstdp-shuffled",
+        "metric": "steeringLate",
+        "test": {
+          "u": 132,
+          "p": 0.0002011718258857847,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "avoidance",
+        "b": "rstdp-shuffled",
+        "metric": "mappingEnd",
+        "test": {
+          "u": 144,
+          "p": 7.39602301050679e-7,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "avoidance-no-stdp",
+        "b": "rstdp",
+        "metric": "lateRally",
+        "test": {
+          "u": 103,
+          "p": 0.07792815040929746,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "avoidance-no-stdp",
+        "b": "rstdp",
+        "metric": "improvement",
+        "test": {
+          "u": 63,
+          "p": 0.629725504001988,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "avoidance-no-stdp",
+        "b": "rstdp",
+        "metric": "steeringLate",
+        "test": {
+          "u": 131,
+          "p": 0.0002743924536898019,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "avoidance-no-stdp",
+        "b": "rstdp",
+        "metric": "mappingEnd",
+        "test": {
+          "u": 113,
+          "p": 0.017271192934135458,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "avoidance-no-stdp",
+        "b": "rstdp-shuffled",
+        "metric": "lateRally",
+        "test": {
+          "u": 76,
+          "p": 0.8397224814147504,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "avoidance-no-stdp",
+        "b": "rstdp-shuffled",
+        "metric": "improvement",
+        "test": {
+          "u": 62,
+          "p": 0.5898757320213774,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "avoidance-no-stdp",
+        "b": "rstdp-shuffled",
+        "metric": "steeringLate",
+        "test": {
+          "u": 125,
+          "p": 0.0014326096571351653,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "avoidance-no-stdp",
+        "b": "rstdp-shuffled",
+        "metric": "mappingEnd",
+        "test": {
+          "u": 112,
+          "p": 0.02048920254600696,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "rstdp",
+        "b": "rstdp-shuffled",
+        "metric": "lateRally",
+        "test": {
+          "u": 60.5,
+          "p": 0.5247411459779361,
+          "method": "normal"
+        }
+      },
+      {
+        "a": "rstdp",
+        "b": "rstdp-shuffled",
+        "metric": "improvement",
+        "test": {
+          "u": 71,
+          "p": 0.9774021912936975,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "rstdp",
+        "b": "rstdp-shuffled",
+        "metric": "steeringLate",
+        "test": {
+          "u": 51,
+          "p": 0.2415237878288087,
+          "method": "exact"
+        }
+      },
+      {
+        "a": "rstdp",
+        "b": "rstdp-shuffled",
+        "metric": "mappingEnd",
+        "test": {
+          "u": 74,
+          "p": 0.9323005033733262,
+          "method": "exact"
+        }
+      }
+    ]
+  },
+  "results": [
+    {
+      "condition": "dishbrain",
+      "mode": "dishbrain",
+      "seed": 1,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.35294117647058826,
+        0.4375,
+        0.35294117647058826,
+        0.15789473684210525,
+        0.15789473684210525,
+        0.8461538461538461,
+        0.29411764705882354,
+        0.6428571428571429,
+        0.7857142857142857,
+        0.2777777777777778
+      ],
+      "binHitRate": [
+        0.2608695652173913,
+        0.3333333333333333,
+        0.22727272727272727,
+        0.13636363636363635,
+        0.13636363636363635,
+        0.4583333333333333,
+        0.2608695652173913,
+        0.391304347826087,
+        0.4166666666666667,
+        0.21739130434782608
+      ],
+      "hits": 66,
+      "misses": 164,
+      "meanRally": 0.4024390243902439,
+      "earlyRally": 0.3333333333333333,
+      "lateRally": 0.5,
+      "mappingEnd": -0.19328786983846769,
+      "steeringLate": -0.009179292306173814
+    },
+    {
+      "condition": "dishbrain",
+      "mode": "dishbrain",
+      "seed": 2,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.21052631578947367,
+        0.6428571428571429,
+        0.4117647058823529,
+        0.4666666666666667,
+        0.2777777777777778,
+        0.2222222222222222,
+        0.3125,
+        0.2631578947368421,
+        0.35294117647058826,
+        0.1
+      ],
+      "binHitRate": [
+        0.17391304347826086,
+        0.391304347826087,
+        0.2916666666666667,
+        0.34782608695652173,
+        0.18181818181818182,
+        0.18181818181818182,
+        0.30434782608695654,
+        0.13636363636363635,
+        0.2608695652173913,
+        0.09090909090909091
+      ],
+      "hits": 54,
+      "misses": 173,
+      "meanRally": 0.31213872832369943,
+      "earlyRally": 0.42592592592592593,
+      "lateRally": 0.22950819672131148,
+      "mappingEnd": 0.05484395117242791,
+      "steeringLate": -0.2506117676535683
+    },
+    {
+      "condition": "dishbrain",
+      "mode": "dishbrain",
+      "seed": 3,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.4375,
+        0.5,
+        0.4,
+        0.15,
+        0.2222222222222222,
+        0.2777777777777778,
+        0.15789473684210525,
+        0.2222222222222222,
+        0.7857142857142857,
+        0.35294117647058826
+      ],
+      "binHitRate": [
+        0.30434782608695654,
+        0.3333333333333333,
+        0.34782608695652173,
+        0.047619047619047616,
+        0.18181818181818182,
+        0.21739130434782608,
+        0.13636363636363635,
+        0.18181818181818182,
+        0.44,
+        0.2608695652173913
+      ],
+      "hits": 57,
+      "misses": 171,
+      "meanRally": 0.3333333333333333,
+      "earlyRally": 0.42592592592592593,
+      "lateRally": 0.41818181818181815,
+      "mappingEnd": 0.20656881786605297,
+      "steeringLate": -0.1589627959413754
+    },
+    {
+      "condition": "dishbrain",
+      "mode": "dishbrain",
+      "seed": 4,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.15789473684210525,
+        0.15789473684210525,
+        0.2777777777777778,
+        0.35294117647058826,
+        0.2777777777777778,
+        0.6,
+        0.35294117647058826,
+        0.5,
+        0.10526315789473684,
+        0.2222222222222222
+      ],
+      "binHitRate": [
+        0.13636363636363635,
+        0.13636363636363635,
+        0.21739130434782608,
+        0.2608695652173913,
+        0.21739130434782608,
+        0.375,
+        0.2608695652173913,
+        0.3333333333333333,
+        0.09523809523809523,
+        0.21739130434782608
+      ],
+      "hits": 52,
+      "misses": 176,
+      "meanRally": 0.2897727272727273,
+      "earlyRally": 0.20967741935483872,
+      "lateRally": 0.2711864406779661,
+      "mappingEnd": 0.008644683845815848,
+      "steeringLate": -0.23932836008760522
+    },
+    {
+      "condition": "dishbrain",
+      "mode": "dishbrain",
+      "seed": 5,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.29411764705882354,
+        0.29411764705882354,
+        0.47058823529411764,
+        0.29411764705882354,
+        0.29411764705882354,
+        0.2777777777777778,
+        1,
+        0.2777777777777778,
+        0.4666666666666667,
+        0.6
+      ],
+      "binHitRate": [
+        0.22727272727272727,
+        0.2608695652173913,
+        0.2916666666666667,
+        0.22727272727272727,
+        0.22727272727272727,
+        0.21739130434782608,
+        0.5,
+        0.21739130434782608,
+        0.34782608695652173,
+        0.34782608695652173
+      ],
+      "hits": 66,
+      "misses": 163,
+      "meanRally": 0.4049079754601227,
+      "earlyRally": 0.3392857142857143,
+      "lateRally": 0.48148148148148145,
+      "mappingEnd": 0.2177474518610314,
+      "steeringLate": -0.048518227117755046
+    },
+    {
+      "condition": "dishbrain",
+      "mode": "dishbrain",
+      "seed": 6,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.4666666666666667,
+        0.3333333333333333,
+        0,
+        0.3125,
+        0.4117647058823529,
+        0.8461538461538461,
+        0.2222222222222222,
+        0.375,
+        0.2777777777777778,
+        0.29411764705882354
+      ],
+      "binHitRate": [
+        0.34782608695652173,
+        0.21739130434782608,
+        0,
+        0.30434782608695654,
+        0.22727272727272727,
+        0.4583333333333333,
+        0.18181818181818182,
+        0.2727272727272727,
+        0.21739130434782608,
+        0.22727272727272727
+      ],
+      "hits": 56,
+      "misses": 169,
+      "meanRally": 0.33136094674556216,
+      "earlyRally": 0.25,
+      "lateRally": 0.3392857142857143,
+      "mappingEnd": 0.11335222253148203,
+      "steeringLate": 0.016818364881192108
+    },
+    {
+      "condition": "dishbrain",
+      "mode": "dishbrain",
+      "seed": 7,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.4375,
+        0.4375,
+        0.6,
+        0.8461538461538461,
+        0.5,
+        0.4375,
+        0.35294117647058826,
+        0.5,
+        0.2631578947368421,
+        0.1
+      ],
+      "binHitRate": [
+        0.30434782608695654,
+        0.30434782608695654,
+        0.375,
+        0.4583333333333333,
+        0.3333333333333333,
+        0.30434782608695654,
+        0.2608695652173913,
+        0.391304347826087,
+        0.13636363636363635,
+        0.09090909090909091
+      ],
+      "hits": 69,
+      "misses": 162,
+      "meanRally": 0.42592592592592593,
+      "earlyRally": 0.52,
+      "lateRally": 0.2542372881355932,
+      "mappingEnd": 0.17035729023329527,
+      "steeringLate": 0.24365138542496936
+    },
+    {
+      "condition": "dishbrain",
+      "mode": "dishbrain",
+      "seed": 8,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.35294117647058826,
+        0.35294117647058826,
+        0.29411764705882354,
+        0.6,
+        0.29411764705882354,
+        0.35294117647058826,
+        0.1,
+        0.6428571428571429,
+        0.35294117647058826,
+        0.5333333333333333
+      ],
+      "binHitRate": [
+        0.2608695652173913,
+        0.2608695652173913,
+        0.22727272727272727,
+        0.375,
+        0.22727272727272727,
+        0.2608695652173913,
+        0.09090909090909091,
+        0.391304347826087,
+        0.2608695652173913,
+        0.34782608695652173
+      ],
+      "hits": 62,
+      "misses": 166,
+      "meanRally": 0.37349397590361444,
+      "earlyRally": 0.35714285714285715,
+      "lateRally": 0.4528301886792453,
+      "mappingEnd": -0.20156035864217614,
+      "steeringLate": -0.07935630335167919
+    },
+    {
+      "condition": "dishbrain",
+      "mode": "dishbrain",
+      "seed": 9,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.35294117647058826,
+        0.15789473684210525,
+        0.2222222222222222,
+        0.2777777777777778,
+        0.4375,
+        0.15789473684210525,
+        0.15789473684210525,
+        0.3333333333333333,
+        0.5333333333333333,
+        0.10526315789473684
+      ],
+      "binHitRate": [
+        0.2608695652173913,
+        0.13636363636363635,
+        0.21739130434782608,
+        0.18181818181818182,
+        0.30434782608695654,
+        0.13636363636363635,
+        0.13636363636363635,
+        0.25,
+        0.34782608695652173,
+        0.09523809523809523
+      ],
+      "hits": 47,
+      "misses": 178,
+      "meanRally": 0.2640449438202247,
+      "earlyRally": 0.26666666666666666,
+      "lateRally": 0.29310344827586204,
+      "mappingEnd": -0.21726295943641283,
+      "steeringLate": 0.03861957032417888
+    },
+    {
+      "condition": "dishbrain",
+      "mode": "dishbrain",
+      "seed": 10,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.15789473684210525,
+        0.05,
+        0.15789473684210525,
+        0.2222222222222222,
+        0.4117647058823529,
+        0.4666666666666667,
+        0.2631578947368421,
+        0.16666666666666666,
+        0.6,
+        0.35294117647058826
+      ],
+      "binHitRate": [
+        0.13636363636363635,
+        0.047619047619047616,
+        0.17391304347826086,
+        0.18181818181818182,
+        0.2608695652173913,
+        0.34782608695652173,
+        0.17391304347826086,
+        0.14285714285714285,
+        0.375,
+        0.2608695652173913
+      ],
+      "hits": 48,
+      "misses": 177,
+      "meanRally": 0.2711864406779661,
+      "earlyRally": 0.12307692307692308,
+      "lateRally": 0.3333333333333333,
+      "mappingEnd": -0.2615776924826676,
+      "steeringLate": -0.19738857501569365
+    },
+    {
+      "condition": "dishbrain",
+      "mode": "dishbrain",
+      "seed": 11,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.16666666666666666,
+        0.2777777777777778,
+        0.15789473684210525,
+        0.1111111111111111,
+        0.3333333333333333,
+        0.2777777777777778,
+        0.35294117647058826,
+        0.2222222222222222,
+        0.5714285714285714,
+        0.4117647058823529
+      ],
+      "binHitRate": [
+        0.14285714285714285,
+        0.21739130434782608,
+        0.13636363636363635,
+        0.14285714285714285,
+        0.21739130434782608,
+        0.21739130434782608,
+        0.2608695652173913,
+        0.18181818181818182,
+        0.391304347826087,
+        0.2916666666666667
+      ],
+      "hits": 50,
+      "misses": 175,
+      "meanRally": 0.28,
+      "earlyRally": 0.19672131147540983,
+      "lateRally": 0.4,
+      "mappingEnd": -0.2364286432942766,
+      "steeringLate": -0.06481279974207069
+    },
+    {
+      "condition": "dishbrain",
+      "mode": "dishbrain",
+      "seed": 12,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.15789473684210525,
+        0.8461538461538461,
+        0.2777777777777778,
+        0.5333333333333333,
+        0.2222222222222222,
+        0.6,
+        0.6,
+        0.5,
+        0.2222222222222222,
+        0.2222222222222222
+      ],
+      "binHitRate": [
+        0.13636363636363635,
+        0.4583333333333333,
+        0.21739130434782608,
+        0.34782608695652173,
+        0.18181818181818182,
+        0.375,
+        0.375,
+        0.3333333333333333,
+        0.18181818181818182,
+        0.21739130434782608
+      ],
+      "hits": 66,
+      "misses": 165,
+      "meanRally": 0.3939393939393939,
+      "earlyRally": 0.4339622641509434,
+      "lateRally": 0.3103448275862069,
+      "mappingEnd": -0.08796433379864865,
+      "steeringLate": -0.037195726106633104
+    },
+    {
+      "condition": "silent",
+      "mode": "silent",
+      "seed": 1,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.21052631578947367,
+        0.7692307692307693,
+        0.6666666666666666,
+        0.10526315789473684,
+        0.5333333333333333,
+        0.5333333333333333,
+        0.2222222222222222,
+        0.15789473684210525,
+        0.5625,
+        0.2222222222222222
+      ],
+      "binHitRate": [
+        0.17391304347826086,
+        0.4583333333333333,
+        0.375,
+        0.09523809523809523,
+        0.34782608695652173,
+        0.34782608695652173,
+        0.18181818181818182,
+        0.17391304347826086,
+        0.3333333333333333,
+        0.21739130434782608
+      ],
+      "hits": 63,
+      "misses": 167,
+      "meanRally": 0.3712574850299401,
+      "earlyRally": 0.4716981132075472,
+      "lateRally": 0.3333333333333333,
+      "mappingEnd": 0.049035727709709764,
+      "steeringLate": -0.009952927689288009
+    },
+    {
+      "condition": "silent",
+      "mode": "silent",
+      "seed": 2,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.2222222222222222,
+        0.4117647058823529,
+        0.2222222222222222,
+        0.2222222222222222,
+        0.35294117647058826,
+        0.10526315789473684,
+        0.47058823529411764,
+        0.375,
+        0.4375,
+        0.35294117647058826
+      ],
+      "binHitRate": [
+        0.21739130434782608,
+        0.2608695652173913,
+        0.18181818181818182,
+        0.18181818181818182,
+        0.2608695652173913,
+        0.13636363636363635,
+        0.2916666666666667,
+        0.2727272727272727,
+        0.30434782608695654,
+        0.2608695652173913
+      ],
+      "hits": 54,
+      "misses": 173,
+      "meanRally": 0.31213872832369943,
+      "earlyRally": 0.2711864406779661,
+      "lateRally": 0.38181818181818183,
+      "mappingEnd": -0.6898433107340294,
+      "steeringLate": -0.5757801916103544
+    },
+    {
+      "condition": "silent",
+      "mode": "silent",
+      "seed": 3,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.5333333333333333,
+        0.4375,
+        0.15789473684210525,
+        0.2777777777777778,
+        0.35294117647058826,
+        0.6,
+        0.1111111111111111,
+        0.3333333333333333,
+        0.4,
+        0.3333333333333333
+      ],
+      "binHitRate": [
+        0.34782608695652173,
+        0.30434782608695654,
+        0.13636363636363635,
+        0.21739130434782608,
+        0.2608695652173913,
+        0.375,
+        0.14285714285714285,
+        0.21739130434782608,
+        0.34782608695652173,
+        0.18181818181818182
+      ],
+      "hits": 58,
+      "misses": 169,
+      "meanRally": 0.3431952662721893,
+      "earlyRally": 0.36363636363636365,
+      "lateRally": 0.3157894736842105,
+      "mappingEnd": -0.02078291421299694,
+      "steeringLate": -0.3050972918244238
+    },
+    {
+      "condition": "silent",
+      "mode": "silent",
+      "seed": 4,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.29411764705882354,
+        0.2631578947368421,
+        0.2222222222222222,
+        0.2222222222222222,
+        0.05263157894736842,
+        0.3888888888888889,
+        0.17647058823529413,
+        0.5625,
+        0.4375,
+        0.2777777777777778
+      ],
+      "binHitRate": [
+        0.2608695652173913,
+        0.17391304347826086,
+        0.18181818181818182,
+        0.18181818181818182,
+        0.13636363636363635,
+        0.21739130434782608,
+        0.22727272727272727,
+        0.3333333333333333,
+        0.2727272727272727,
+        0.21739130434782608
+      ],
+      "hits": 50,
+      "misses": 176,
+      "meanRally": 0.2840909090909091,
+      "earlyRally": 0.26666666666666666,
+      "lateRally": 0.38181818181818183,
+      "mappingEnd": -0.10429915934913137,
+      "steeringLate": -0.30809541776715715
+    },
+    {
+      "condition": "silent",
+      "mode": "silent",
+      "seed": 5,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.4375,
+        0.4375,
+        0.29411764705882354,
+        0.21052631578947367,
+        0.2777777777777778,
+        0.29411764705882354,
+        0.5714285714285714,
+        0.5625,
+        0.15789473684210525,
+        0.375
+      ],
+      "binHitRate": [
+        0.30434782608695654,
+        0.30434782608695654,
+        0.2608695652173913,
+        0.13636363636363635,
+        0.21739130434782608,
+        0.22727272727272727,
+        0.391304347826087,
+        0.3333333333333333,
+        0.13636363636363635,
+        0.30434782608695654
+      ],
+      "hits": 60,
+      "misses": 168,
+      "meanRally": 0.35119047619047616,
+      "earlyRally": 0.4,
+      "lateRally": 0.3392857142857143,
+      "mappingEnd": -0.15795071869600052,
+      "steeringLate": -0.167104769057454
+    },
+    {
+      "condition": "silent",
+      "mode": "silent",
+      "seed": 6,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.29411764705882354,
+        0.5625,
+        0.5333333333333333,
+        0.4375,
+        0.4375,
+        0.7142857142857143,
+        0.35294117647058826,
+        0.35294117647058826,
+        0.16666666666666666,
+        0.2777777777777778
+      ],
+      "binHitRate": [
+        0.22727272727272727,
+        0.36,
+        0.34782608695652173,
+        0.30434782608695654,
+        0.3333333333333333,
+        0.391304347826087,
+        0.2608695652173913,
+        0.2608695652173913,
+        0.18181818181818182,
+        0.18181818181818182
+      ],
+      "hits": 66,
+      "misses": 164,
+      "meanRally": 0.4024390243902439,
+      "earlyRally": 0.4528301886792453,
+      "lateRally": 0.29310344827586204,
+      "mappingEnd": -0.021728120462708223,
+      "steeringLate": -0.13163941633692525
+    },
+    {
+      "condition": "silent",
+      "mode": "silent",
+      "seed": 7,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.15789473684210525,
+        0.15,
+        0.29411764705882354,
+        0.4,
+        0.5625,
+        0.5625,
+        0.9166666666666666,
+        0.47058823529411764,
+        0.5,
+        0.4375
+      ],
+      "binHitRate": [
+        0.13636363636363635,
+        0.13043478260869565,
+        0.22727272727272727,
+        0.375,
+        0.30434782608695654,
+        0.3333333333333333,
+        0.5384615384615384,
+        0.22727272727272727,
+        0.3333333333333333,
+        0.30434782608695654
+      ],
+      "hits": 69,
+      "misses": 164,
+      "meanRally": 0.42073170731707316,
+      "earlyRally": 0.20967741935483872,
+      "lateRally": 0.42592592592592593,
+      "mappingEnd": 0.3426396531201825,
+      "steeringLate": -0.14921391385428268
+    },
+    {
+      "condition": "silent",
+      "mode": "silent",
+      "seed": 8,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.4375,
+        0.047619047619047616,
+        0.375,
+        0.21052631578947367,
+        0.6,
+        0.29411764705882354,
+        0.047619047619047616,
+        0.5714285714285714,
+        0.2631578947368421,
+        0.2777777777777778
+      ],
+      "binHitRate": [
+        0.30434782608695654,
+        0.045454545454545456,
+        0.2727272727272727,
+        0.17391304347826086,
+        0.375,
+        0.22727272727272727,
+        0.045454545454545456,
+        0.391304347826087,
+        0.17391304347826086,
+        0.21739130434782608
+      ],
+      "hits": 51,
+      "misses": 176,
+      "meanRally": 0.2897727272727273,
+      "earlyRally": 0.2711864406779661,
+      "lateRally": 0.3333333333333333,
+      "mappingEnd": -0.06083758209139889,
+      "steeringLate": -0.011331540013449899
+    },
+    {
+      "condition": "silent",
+      "mode": "silent",
+      "seed": 9,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.35294117647058826,
+        0.15789473684210525,
+        0.5333333333333333,
+        0.35294117647058826,
+        0.23529411764705882,
+        0.35294117647058826,
+        0.3333333333333333,
+        0.35294117647058826,
+        0.2777777777777778,
+        0.2777777777777778
+      ],
+      "binHitRate": [
+        0.2608695652173913,
+        0.13636363636363635,
+        0.34782608695652173,
+        0.2608695652173913,
+        0.22727272727272727,
+        0.2916666666666667,
+        0.18181818181818182,
+        0.2608695652173913,
+        0.21739130434782608,
+        0.21739130434782608
+      ],
+      "hits": 55,
+      "misses": 173,
+      "meanRally": 0.3179190751445087,
+      "earlyRally": 0.29310344827586204,
+      "lateRally": 0.288135593220339,
+      "mappingEnd": 0.1619103915490876,
+      "steeringLate": -0.2987567756154429
+    },
+    {
+      "condition": "silent",
+      "mode": "silent",
+      "seed": 10,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.35294117647058826,
+        0.2222222222222222,
+        0.15789473684210525,
+        0.15789473684210525,
+        0.35294117647058826,
+        0.5,
+        0.15789473684210525,
+        0.1,
+        0.4375,
+        0.35294117647058826
+      ],
+      "binHitRate": [
+        0.2608695652173913,
+        0.18181818181818182,
+        0.13636363636363635,
+        0.13636363636363635,
+        0.2608695652173913,
+        0.3333333333333333,
+        0.13636363636363635,
+        0.09090909090909091,
+        0.30434782608695654,
+        0.2608695652173913
+      ],
+      "hits": 48,
+      "misses": 178,
+      "meanRally": 0.2696629213483146,
+      "earlyRally": 0.23333333333333334,
+      "lateRally": 0.25,
+      "mappingEnd": -0.44473558618529774,
+      "steeringLate": -0.08019939582067691
+    },
+    {
+      "condition": "silent",
+      "mode": "silent",
+      "seed": 11,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.4375,
+        0.6,
+        0.2777777777777778,
+        0.29411764705882354,
+        0.15789473684210525,
+        0.6,
+        0.4375,
+        0.29411764705882354,
+        0.6428571428571429,
+        0.5
+      ],
+      "binHitRate": [
+        0.30434782608695654,
+        0.375,
+        0.21739130434782608,
+        0.22727272727272727,
+        0.13636363636363635,
+        0.375,
+        0.30434782608695654,
+        0.22727272727272727,
+        0.391304347826087,
+        0.3333333333333333
+      ],
+      "hits": 67,
+      "misses": 163,
+      "meanRally": 0.4110429447852761,
+      "earlyRally": 0.42592592592592593,
+      "lateRally": 0.5098039215686274,
+      "mappingEnd": -0.17916950145045574,
+      "steeringLate": -0.19297127654490132
+    },
+    {
+      "condition": "silent",
+      "mode": "silent",
+      "seed": 12,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.15789473684210525,
+        0.4375,
+        0.35294117647058826,
+        0.4666666666666667,
+        0.21052631578947367,
+        0.4117647058823529,
+        0.7142857142857143,
+        0.4,
+        0.4117647058823529,
+        0.7142857142857143
+      ],
+      "binHitRate": [
+        0.13636363636363635,
+        0.30434782608695654,
+        0.2608695652173913,
+        0.34782608695652173,
+        0.13636363636363635,
+        0.2916666666666667,
+        0.4166666666666667,
+        0.3181818181818182,
+        0.2608695652173913,
+        0.4166666666666667
+      ],
+      "hits": 67,
+      "misses": 163,
+      "meanRally": 0.4110429447852761,
+      "earlyRally": 0.3392857142857143,
+      "lateRally": 0.5098039215686274,
+      "mappingEnd": 0.1455400218939107,
+      "steeringLate": -0.030247566905135165
+    },
+    {
+      "condition": "avoidance",
+      "mode": "avoidance",
+      "seed": 1,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.2222222222222222,
+        0.15789473684210525,
+        0.5714285714285714,
+        0.7142857142857143,
+        1.0833333333333333,
+        0.5333333333333333,
+        0.5333333333333333,
+        0.6666666666666666,
+        0.7142857142857143,
+        0.5
+      ],
+      "binHitRate": [
+        0.18181818181818182,
+        0.17391304347826086,
+        0.391304347826087,
+        0.391304347826087,
+        0.5,
+        0.34782608695652173,
+        0.375,
+        0.375,
+        0.4166666666666667,
+        0.3333333333333333
+      ],
+      "hits": 82,
+      "misses": 152,
+      "meanRally": 0.5394736842105263,
+      "earlyRally": 0.35714285714285715,
+      "lateRally": 0.6875,
+      "mappingEnd": 0.956288178778431,
+      "steeringLate": 0.5497018237292837
+    },
+    {
+      "condition": "avoidance",
+      "mode": "avoidance",
+      "seed": 2,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.1,
+        0.35294117647058826,
+        0.15789473684210525,
+        0.6,
+        0.21052631578947367,
+        0.15789473684210525,
+        0.35294117647058826,
+        0.35294117647058826,
+        0.15789473684210525,
+        0.29411764705882354
+      ],
+      "binHitRate": [
+        0.09090909090909091,
+        0.2608695652173913,
+        0.13636363636363635,
+        0.375,
+        0.17391304347826086,
+        0.13636363636363635,
+        0.2608695652173913,
+        0.2608695652173913,
+        0.13636363636363635,
+        0.22727272727272727
+      ],
+      "hits": 47,
+      "misses": 179,
+      "meanRally": 0.26256983240223464,
+      "earlyRally": 0.25,
+      "lateRally": 0.2542372881355932,
+      "mappingEnd": 0.7673434090432476,
+      "steeringLate": -0.1382319632269669
+    },
+    {
+      "condition": "avoidance",
+      "mode": "avoidance",
+      "seed": 3,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.3125,
+        0.2631578947368421,
+        0.4375,
+        0.4375,
+        1.1818181818181819,
+        0.5333333333333333,
+        0.4375,
+        1.2727272727272727,
+        0.46153846153846156,
+        1.5
+      ],
+      "binHitRate": [
+        0.30434782608695654,
+        0.13636363636363635,
+        0.30434782608695654,
+        0.30434782608695654,
+        0.5416666666666666,
+        0.34782608695652173,
+        0.30434782608695654,
+        0.56,
+        0.48,
+        0.52
+      ],
+      "hits": 91,
+      "misses": 145,
+      "meanRally": 0.6206896551724138,
+      "earlyRally": 0.3157894736842105,
+      "lateRally": 1.025,
+      "mappingEnd": 1.4213298512383257,
+      "steeringLate": 0.6848693864354227
+    },
+    {
+      "condition": "avoidance",
+      "mode": "avoidance",
+      "seed": 4,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.2777777777777778,
+        0.7142857142857143,
+        0.15789473684210525,
+        0.1111111111111111,
+        1.25,
+        0.5333333333333333,
+        0.6,
+        0.4117647058823529,
+        1.1818181818181819,
+        0.4117647058823529
+      ],
+      "binHitRate": [
+        0.21739130434782608,
+        0.4166666666666667,
+        0.13636363636363635,
+        0.18181818181818182,
+        0.52,
+        0.34782608695652173,
+        0.375,
+        0.2916666666666667,
+        0.5416666666666666,
+        0.2916666666666667
+      ],
+      "hits": 79,
+      "misses": 156,
+      "meanRally": 0.5064102564102564,
+      "earlyRally": 0.3333333333333333,
+      "lateRally": 0.5769230769230769,
+      "mappingEnd": 0.6516147853056955,
+      "steeringLate": 0.11131666623842681
+    },
+    {
+      "condition": "avoidance",
+      "mode": "avoidance",
+      "seed": 5,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.6,
+        0.9230769230769231,
+        0.35294117647058826,
+        0.2777777777777778,
+        1.2727272727272727,
+        1.3636363636363635,
+        0.6428571428571429,
+        0.6428571428571429,
+        0.4375,
+        0.6
+      ],
+      "binHitRate": [
+        0.375,
+        0.48,
+        0.2608695652173913,
+        0.21739130434782608,
+        0.56,
+        0.5769230769230769,
+        0.391304347826087,
+        0.4166666666666667,
+        0.2727272727272727,
+        0.375
+      ],
+      "hits": 95,
+      "misses": 144,
+      "meanRally": 0.6597222222222222,
+      "earlyRally": 0.54,
+      "lateRally": 0.5294117647058824,
+      "mappingEnd": 1.043883856144028,
+      "steeringLate": 0.6140965625484774
+    },
+    {
+      "condition": "avoidance",
+      "mode": "avoidance",
+      "seed": 6,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.29411764705882354,
+        0.375,
+        0.4375,
+        0.3125,
+        0.375,
+        0.7142857142857143,
+        0.6923076923076923,
+        0.5714285714285714,
+        0.3333333333333333,
+        0.4375
+      ],
+      "binHitRate": [
+        0.22727272727272727,
+        0.2727272727272727,
+        0.30434782608695654,
+        0.2727272727272727,
+        0.2727272727272727,
+        0.391304347826087,
+        0.4090909090909091,
+        0.391304347826087,
+        0.21739130434782608,
+        0.30434782608695654
+      ],
+      "hits": 69,
+      "misses": 156,
+      "meanRally": 0.4423076923076923,
+      "earlyRally": 0.34545454545454546,
+      "lateRally": 0.46153846153846156,
+      "mappingEnd": 0.539000403433942,
+      "steeringLate": 0.32867353199674976
+    },
+    {
+      "condition": "avoidance",
+      "mode": "avoidance",
+      "seed": 7,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        1,
+        0.8,
+        null,
+        74,
+        20,
+        1.7777777777777777,
+        3.125,
+        8,
+        4.857142857142857,
+        2.2857142857142856
+      ],
+      "binHitRate": [
+        0.5,
+        0.8333333333333334,
+        1,
+        0.9696969696969697,
+        0.9354838709677419,
+        0.6785714285714286,
+        0.7142857142857143,
+        0.9375,
+        0.75,
+        0.7666666666666667
+      ],
+      "hits": 245,
+      "misses": 53,
+      "meanRally": 4.471698113207547,
+      "earlyRally": 0.9411764705882353,
+      "lateRally": 3.789473684210526,
+      "mappingEnd": 0.8625156944699355,
+      "steeringLate": 0.7227116592806165
+    },
+    {
+      "condition": "avoidance",
+      "mode": "avoidance",
+      "seed": 8,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.35294117647058826,
+        0.2222222222222222,
+        0.29411764705882354,
+        0.4375,
+        0.4375,
+        0.6923076923076923,
+        0.2777777777777778,
+        0.7142857142857143,
+        0.6923076923076923,
+        1
+      ],
+      "binHitRate": [
+        0.2608695652173913,
+        0.18181818181818182,
+        0.22727272727272727,
+        0.30434782608695654,
+        0.30434782608695654,
+        0.4090909090909091,
+        0.21739130434782608,
+        0.4166666666666667,
+        0.43478260869565216,
+        0.48
+      ],
+      "hits": 75,
+      "misses": 155,
+      "meanRally": 0.4838709677419355,
+      "earlyRally": 0.3157894736842105,
+      "lateRally": 0.717391304347826,
+      "mappingEnd": 1.012712432312205,
+      "steeringLate": 0.5865356833285178
+    },
+    {
+      "condition": "avoidance",
+      "mode": "avoidance",
+      "seed": 9,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.3125,
+        0.47058823529411764,
+        0.29411764705882354,
+        0.35294117647058826,
+        0.35294117647058826,
+        0.23529411764705882,
+        0.6,
+        0.35294117647058826,
+        0.7142857142857143,
+        0.23529411764705882
+      ],
+      "binHitRate": [
+        0.3333333333333333,
+        0.22727272727272727,
+        0.22727272727272727,
+        0.2608695652173913,
+        0.2608695652173913,
+        0.2608695652173913,
+        0.34782608695652173,
+        0.22727272727272727,
+        0.4166666666666667,
+        0.22727272727272727
+      ],
+      "hits": 64,
+      "misses": 164,
+      "meanRally": 0.38414634146341464,
+      "earlyRally": 0.4,
+      "lateRally": 0.5,
+      "mappingEnd": 0.8254456917598909,
+      "steeringLate": -0.07741606351433218
+    },
+    {
+      "condition": "avoidance",
+      "mode": "avoidance",
+      "seed": 10,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.2222222222222222,
+        0.35294117647058826,
+        0.2777777777777778,
+        0.21052631578947367,
+        0.10526315789473684,
+        1,
+        0.35294117647058826,
+        0.7142857142857143,
+        0.29411764705882354,
+        0.4666666666666667
+      ],
+      "binHitRate": [
+        0.18181818181818182,
+        0.2608695652173913,
+        0.21739130434782608,
+        0.17391304347826086,
+        0.09523809523809523,
+        0.5,
+        0.2608695652173913,
+        0.4166666666666667,
+        0.22727272727272727,
+        0.34782608695652173
+      ],
+      "hits": 62,
+      "misses": 166,
+      "meanRally": 0.3674698795180723,
+      "earlyRally": 0.26666666666666666,
+      "lateRally": 0.46153846153846156,
+      "mappingEnd": 0.12763143240218522,
+      "steeringLate": 0.17674806000181423
+    },
+    {
+      "condition": "avoidance",
+      "mode": "avoidance",
+      "seed": 11,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.4666666666666667,
+        0.8571428571428571,
+        0.16666666666666666,
+        0.21052631578947367,
+        0.16666666666666666,
+        0.21052631578947367,
+        0.4375,
+        0.23529411764705882,
+        0.2777777777777778,
+        0.4375
+      ],
+      "binHitRate": [
+        0.375,
+        0.4166666666666667,
+        0.14285714285714285,
+        0.17391304347826086,
+        0.18181818181818182,
+        0.13636363636363635,
+        0.30434782608695654,
+        0.22727272727272727,
+        0.18181818181818182,
+        0.30434782608695654
+      ],
+      "hits": 56,
+      "misses": 170,
+      "meanRally": 0.32941176470588235,
+      "earlyRally": 0.4339622641509434,
+      "lateRally": 0.2982456140350877,
+      "mappingEnd": 0.290599284117107,
+      "steeringLate": 0.05995453520051365
+    },
+    {
+      "condition": "avoidance",
+      "mode": "avoidance",
+      "seed": 12,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.2222222222222222,
+        0.4166666666666667,
+        1.0714285714285714,
+        0.6,
+        0.6,
+        0.35294117647058826,
+        0.23529411764705882,
+        0.47058823529411764,
+        0.7692307692307693,
+        0.8461538461538461
+      ],
+      "binHitRate": [
+        0.18181818181818182,
+        0.5,
+        0.391304347826087,
+        0.375,
+        0.375,
+        0.22727272727272727,
+        0.22727272727272727,
+        0.2916666666666667,
+        0.4583333333333333,
+        0.4583333333333333
+      ],
+      "hits": 82,
+      "misses": 151,
+      "meanRally": 0.5364238410596026,
+      "earlyRally": 0.54,
+      "lateRally": 0.5918367346938775,
+      "mappingEnd": 0.4817315137654079,
+      "steeringLate": 0.2503193271734983
+    },
+    {
+      "condition": "avoidance-no-stdp",
+      "mode": "avoidance",
+      "seed": 1,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.15789473684210525,
+        0.21052631578947367,
+        0.35294117647058826,
+        0.4375,
+        0.2777777777777778,
+        0.4,
+        0.7333333333333333,
+        0.1,
+        0.4666666666666667,
+        0.7142857142857143
+      ],
+      "binHitRate": [
+        0.13636363636363635,
+        0.17391304347826086,
+        0.2608695652173913,
+        0.30434782608695654,
+        0.21739130434782608,
+        0.3181818181818182,
+        0.4,
+        0.09090909090909091,
+        0.34782608695652173,
+        0.391304347826087
+      ],
+      "hits": 61,
+      "misses": 168,
+      "meanRally": 0.3630952380952381,
+      "earlyRally": 0.25,
+      "lateRally": 0.4444444444444444,
+      "mappingEnd": 0.04831360733088186,
+      "steeringLate": 0.1759070508787383
+    },
+    {
+      "condition": "avoidance-no-stdp",
+      "mode": "avoidance",
+      "seed": 2,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.4375,
+        0.4375,
+        0.6,
+        0.35294117647058826,
+        0.16666666666666666,
+        0.21052631578947367,
+        0.4375,
+        0.4666666666666667,
+        0.4666666666666667,
+        0.2
+      ],
+      "binHitRate": [
+        0.30434782608695654,
+        0.30434782608695654,
+        0.375,
+        0.2608695652173913,
+        0.14285714285714285,
+        0.17391304347826086,
+        0.30434782608695654,
+        0.3181818181818182,
+        0.375,
+        0.09090909090909091
+      ],
+      "hits": 61,
+      "misses": 167,
+      "meanRally": 0.3652694610778443,
+      "earlyRally": 0.4716981132075472,
+      "lateRally": 0.4107142857142857,
+      "mappingEnd": 0.030961971074612293,
+      "steeringLate": 0.08880379436659495
+    },
+    {
+      "condition": "avoidance-no-stdp",
+      "mode": "avoidance",
+      "seed": 3,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.2777777777777778,
+        0.35294117647058826,
+        0.6428571428571429,
+        0.29411764705882354,
+        0.2777777777777778,
+        0.2777777777777778,
+        0.35294117647058826,
+        0.4375,
+        0.29411764705882354,
+        0.4117647058823529
+      ],
+      "binHitRate": [
+        0.21739130434782608,
+        0.2608695652173913,
+        0.391304347826087,
+        0.2608695652173913,
+        0.18181818181818182,
+        0.21739130434782608,
+        0.2608695652173913,
+        0.30434782608695654,
+        0.2608695652173913,
+        0.2608695652173913
+      ],
+      "hits": 60,
+      "misses": 169,
+      "meanRally": 0.35502958579881655,
+      "earlyRally": 0.38181818181818183,
+      "lateRally": 0.4,
+      "mappingEnd": -0.006766229834119564,
+      "steeringLate": -0.30914669541421347
+    },
+    {
+      "condition": "avoidance-no-stdp",
+      "mode": "avoidance",
+      "seed": 4,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.21052631578947367,
+        0.4375,
+        0.375,
+        0.4375,
+        0.4117647058823529,
+        0.4666666666666667,
+        0.21052631578947367,
+        0.5625,
+        0.6923076923076923,
+        0.2
+      ],
+      "binHitRate": [
+        0.17391304347826086,
+        0.30434782608695654,
+        0.30434782608695654,
+        0.2727272727272727,
+        0.2916666666666667,
+        0.34782608695652173,
+        0.13636363636363635,
+        0.36,
+        0.4583333333333333,
+        0.09090909090909091
+      ],
+      "hits": 64,
+      "misses": 167,
+      "meanRally": 0.38323353293413176,
+      "earlyRally": 0.3157894736842105,
+      "lateRally": 0.41818181818181815,
+      "mappingEnd": -0.055031883926139,
+      "steeringLate": 0.11637063836768528
+    },
+    {
+      "condition": "avoidance-no-stdp",
+      "mode": "avoidance",
+      "seed": 5,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.375,
+        1.0833333333333333,
+        0.5714285714285714,
+        0.29411764705882354,
+        0.3333333333333333,
+        0.15789473684210525,
+        0.05,
+        0.35294117647058826,
+        0.2777777777777778,
+        0.2222222222222222
+      ],
+      "binHitRate": [
+        0.2727272727272727,
+        0.52,
+        0.391304347826087,
+        0.22727272727272727,
+        0.21739130434782608,
+        0.13636363636363635,
+        0.047619047619047616,
+        0.2608695652173913,
+        0.21739130434782608,
+        0.18181818181818182
+      ],
+      "hits": 57,
+      "misses": 169,
+      "meanRally": 0.33727810650887574,
+      "earlyRally": 0.6382978723404256,
+      "lateRally": 0.25,
+      "mappingEnd": 0.02680290653542805,
+      "steeringLate": 0.0699768131205463
+    },
+    {
+      "condition": "avoidance-no-stdp",
+      "mode": "avoidance",
+      "seed": 6,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.1,
+        0.35294117647058826,
+        1,
+        0.35294117647058826,
+        0.7692307692307693,
+        0.5333333333333333,
+        0.5714285714285714,
+        0.15789473684210525,
+        0.5333333333333333,
+        0.5333333333333333
+      ],
+      "binHitRate": [
+        0.09090909090909091,
+        0.2608695652173913,
+        0.5,
+        0.2608695652173913,
+        0.43478260869565216,
+        0.34782608695652173,
+        0.36363636363636365,
+        0.13636363636363635,
+        0.34782608695652173,
+        0.34782608695652173
+      ],
+      "hits": 71,
+      "misses": 157,
+      "meanRally": 0.45222929936305734,
+      "earlyRally": 0.38181818181818183,
+      "lateRally": 0.42592592592592593,
+      "mappingEnd": 0.016827526143143423,
+      "steeringLate": 0.03848045139728128
+    },
+    {
+      "condition": "avoidance-no-stdp",
+      "mode": "avoidance",
+      "seed": 7,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.5333333333333333,
+        0.7142857142857143,
+        0.5625,
+        0.7692307692307693,
+        0.5625,
+        0.23529411764705882,
+        0.21052631578947367,
+        0.29411764705882354,
+        0.15789473684210525,
+        0.5
+      ],
+      "binHitRate": [
+        0.375,
+        0.4166666666666667,
+        0.3333333333333333,
+        0.4583333333333333,
+        0.3333333333333333,
+        0.19047619047619047,
+        0.17391304347826086,
+        0.22727272727272727,
+        0.13636363636363635,
+        0.3333333333333333
+      ],
+      "hits": 70,
+      "misses": 162,
+      "meanRally": 0.43209876543209874,
+      "earlyRally": 0.5686274509803921,
+      "lateRally": 0.26666666666666666,
+      "mappingEnd": 0.011302207965370847,
+      "steeringLate": 0.1496904274564093
+    },
+    {
+      "condition": "avoidance-no-stdp",
+      "mode": "avoidance",
+      "seed": 8,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.2222222222222222,
+        0.35294117647058826,
+        0.2222222222222222,
+        0.1,
+        0.4375,
+        0.15789473684210525,
+        0.7142857142857143,
+        0.29411764705882354,
+        0.15789473684210525,
+        0.21052631578947367
+      ],
+      "binHitRate": [
+        0.18181818181818182,
+        0.2608695652173913,
+        0.18181818181818182,
+        0.09090909090909091,
+        0.30434782608695654,
+        0.13636363636363635,
+        0.4166666666666667,
+        0.22727272727272727,
+        0.13636363636363635,
+        0.17391304347826086
+      ],
+      "hits": 48,
+      "misses": 177,
+      "meanRally": 0.2711864406779661,
+      "earlyRally": 0.23333333333333334,
+      "lateRally": 0.22950819672131148,
+      "mappingEnd": 0.03167641817781419,
+      "steeringLate": 0.15690450528131064
+    },
+    {
+      "condition": "avoidance-no-stdp",
+      "mode": "avoidance",
+      "seed": 9,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.4117647058823529,
+        0.6428571428571429,
+        0.4117647058823529,
+        0.5333333333333333,
+        0.3125,
+        1.1666666666666667,
+        0.29411764705882354,
+        0.5333333333333333,
+        0.5333333333333333,
+        0.2222222222222222
+      ],
+      "binHitRate": [
+        0.2916666666666667,
+        0.391304347826087,
+        0.2916666666666667,
+        0.34782608695652173,
+        0.30434782608695654,
+        0.5,
+        0.22727272727272727,
+        0.34782608695652173,
+        0.34782608695652173,
+        0.18181818181818182
+      ],
+      "hits": 75,
+      "misses": 156,
+      "meanRally": 0.4807692307692308,
+      "earlyRally": 0.4716981132075472,
+      "lateRally": 0.3888888888888889,
+      "mappingEnd": 0.005483934084589137,
+      "steeringLate": -0.026776570920140345
+    },
+    {
+      "condition": "avoidance-no-stdp",
+      "mode": "avoidance",
+      "seed": 10,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.5333333333333333,
+        0.2777777777777778,
+        0.4117647058823529,
+        0.6428571428571429,
+        0.2777777777777778,
+        0.7692307692307693,
+        0.35294117647058826,
+        0.15789473684210525,
+        0.6428571428571429,
+        0.35294117647058826
+      ],
+      "binHitRate": [
+        0.375,
+        0.21739130434782608,
+        0.2608695652173913,
+        0.391304347826087,
+        0.21739130434782608,
+        0.43478260869565216,
+        0.2916666666666667,
+        0.09523809523809523,
+        0.391304347826087,
+        0.2608695652173913
+      ],
+      "hits": 68,
+      "misses": 162,
+      "meanRally": 0.41975308641975306,
+      "earlyRally": 0.42592592592592593,
+      "lateRally": 0.36363636363636365,
+      "mappingEnd": 0.024573086328499194,
+      "steeringLate": 0.1812235029146794
+    },
+    {
+      "condition": "avoidance-no-stdp",
+      "mode": "avoidance",
+      "seed": 11,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.35294117647058826,
+        0.2222222222222222,
+        0.35294117647058826,
+        0.35294117647058826,
+        0.4375,
+        0.9166666666666666,
+        0.2777777777777778,
+        0.4375,
+        0.2222222222222222,
+        0.4375
+      ],
+      "binHitRate": [
+        0.2608695652173913,
+        0.18181818181818182,
+        0.2608695652173913,
+        0.2608695652173913,
+        0.30434782608695654,
+        0.5,
+        0.18181818181818182,
+        0.30434782608695654,
+        0.18181818181818182,
+        0.30434782608695654
+      ],
+      "hits": 63,
+      "misses": 165,
+      "meanRally": 0.38181818181818183,
+      "earlyRally": 0.3157894736842105,
+      "lateRally": 0.38181818181818183,
+      "mappingEnd": 0.046198904106806715,
+      "steeringLate": -0.14284755601412621
+    },
+    {
+      "condition": "avoidance-no-stdp",
+      "mode": "avoidance",
+      "seed": 12,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.15789473684210525,
+        0.7142857142857143,
+        0.3125,
+        0.15,
+        0.42857142857142855,
+        0.3333333333333333,
+        0.21052631578947367,
+        0.5333333333333333,
+        0.15789473684210525,
+        0.29411764705882354
+      ],
+      "binHitRate": [
+        0.13636363636363635,
+        0.4166666666666667,
+        0.2727272727272727,
+        0.09090909090909091,
+        0.36363636363636365,
+        0.18181818181818182,
+        0.17391304347826086,
+        0.34782608695652173,
+        0.13636363636363635,
+        0.22727272727272727
+      ],
+      "hits": 53,
+      "misses": 171,
+      "meanRally": 0.30994152046783624,
+      "earlyRally": 0.36363636363636365,
+      "lateRally": 0.29310344827586204,
+      "mappingEnd": -0.039975455497228474,
+      "steeringLate": 0.08695688301328658
+    },
+    {
+      "condition": "rstdp",
+      "mode": "silent",
+      "seed": 1,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.35294117647058826,
+        0.6,
+        0.2777777777777778,
+        0.16666666666666666,
+        0.5,
+        0.4117647058823529,
+        0.15789473684210525,
+        0.2777777777777778,
+        0.15,
+        0.2222222222222222
+      ],
+      "binHitRate": [
+        0.2608695652173913,
+        0.375,
+        0.21739130434782608,
+        0.14285714285714285,
+        0.3333333333333333,
+        0.2916666666666667,
+        0.13636363636363635,
+        0.21739130434782608,
+        0.13043478260869565,
+        0.18181818181818182
+      ],
+      "hits": 53,
+      "misses": 176,
+      "meanRally": 0.30113636363636365,
+      "earlyRally": 0.375,
+      "lateRally": 0.20967741935483872,
+      "mappingEnd": 0.0036475406639346897,
+      "steeringLate": -0.1611198862009403
+    },
+    {
+      "condition": "rstdp",
+      "mode": "silent",
+      "seed": 2,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.2222222222222222,
+        0.4375,
+        0.2222222222222222,
+        0.375,
+        0.4375,
+        0.6,
+        0.3333333333333333,
+        0.6,
+        0.4666666666666667,
+        0.15789473684210525
+      ],
+      "binHitRate": [
+        0.18181818181818182,
+        0.30434782608695654,
+        0.18181818181818182,
+        0.2727272727272727,
+        0.3333333333333333,
+        0.375,
+        0.21739130434782608,
+        0.375,
+        0.3181818181818182,
+        0.13636363636363635
+      ],
+      "hits": 62,
+      "misses": 166,
+      "meanRally": 0.37349397590361444,
+      "earlyRally": 0.2982456140350877,
+      "lateRally": 0.35714285714285715,
+      "mappingEnd": 0.13007531274589312,
+      "steeringLate": -0.3847115571437019
+    },
+    {
+      "condition": "rstdp",
+      "mode": "silent",
+      "seed": 3,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.15789473684210525,
+        0.5,
+        0.29411764705882354,
+        0.3333333333333333,
+        0.5333333333333333,
+        0.375,
+        0.6666666666666666,
+        0.5,
+        0.6,
+        0.2222222222222222
+      ],
+      "binHitRate": [
+        0.13636363636363635,
+        0.3333333333333333,
+        0.22727272727272727,
+        0.25,
+        0.34782608695652173,
+        0.30434782608695654,
+        0.375,
+        0.36363636363636365,
+        0.34782608695652173,
+        0.18181818181818182
+      ],
+      "hits": 66,
+      "misses": 163,
+      "meanRally": 0.4049079754601227,
+      "earlyRally": 0.3333333333333333,
+      "lateRally": 0.3888888888888889,
+      "mappingEnd": -0.07836526778205855,
+      "steeringLate": -0.09696954572300832
+    },
+    {
+      "condition": "rstdp",
+      "mode": "silent",
+      "seed": 4,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.35294117647058826,
+        0.35294117647058826,
+        0.2777777777777778,
+        0.05263157894736842,
+        0.2,
+        0.5333333333333333,
+        0.16666666666666666,
+        0.375,
+        0.3333333333333333,
+        0.4666666666666667
+      ],
+      "binHitRate": [
+        0.2608695652173913,
+        0.2608695652173913,
+        0.21739130434782608,
+        0.09523809523809523,
+        0.13043478260869565,
+        0.34782608695652173,
+        0.18181818181818182,
+        0.2727272727272727,
+        0.21739130434782608,
+        0.3181818181818182
+      ],
+      "hits": 52,
+      "misses": 173,
+      "meanRally": 0.30057803468208094,
+      "earlyRally": 0.288135593220339,
+      "lateRally": 0.36363636363636365,
+      "mappingEnd": 0.029101776539782964,
+      "steeringLate": -0.24699462726662189
+    },
+    {
+      "condition": "rstdp",
+      "mode": "silent",
+      "seed": 5,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.047619047619047616,
+        0.5,
+        0.29411764705882354,
+        0.1,
+        0.6,
+        0.5,
+        0.375,
+        0.2777777777777778,
+        0.35294117647058826,
+        0.2777777777777778
+      ],
+      "binHitRate": [
+        0.045454545454545456,
+        0.3333333333333333,
+        0.22727272727272727,
+        0.09090909090909091,
+        0.375,
+        0.3333333333333333,
+        0.30434782608695654,
+        0.18181818181818182,
+        0.2608695652173913,
+        0.21739130434782608
+      ],
+      "hits": 55,
+      "misses": 174,
+      "meanRally": 0.3160919540229885,
+      "earlyRally": 0.2459016393442623,
+      "lateRally": 0.3103448275862069,
+      "mappingEnd": -0.23562907575330705,
+      "steeringLate": -0.6179039118844067
+    },
+    {
+      "condition": "rstdp",
+      "mode": "silent",
+      "seed": 6,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.7692307692307693,
+        0.2222222222222222,
+        0.2777777777777778,
+        0.6666666666666666,
+        0.4666666666666667,
+        0.5625,
+        0.2222222222222222,
+        0.2777777777777778,
+        0.4375,
+        0.047619047619047616
+      ],
+      "binHitRate": [
+        0.4583333333333333,
+        0.18181818181818182,
+        0.18181818181818182,
+        0.4,
+        0.3181818181818182,
+        0.36,
+        0.18181818181818182,
+        0.21739130434782608,
+        0.30434782608695654,
+        0.045454545454545456
+      ],
+      "hits": 62,
+      "misses": 168,
+      "meanRally": 0.36904761904761907,
+      "earlyRally": 0.4423076923076923,
+      "lateRally": 0.22950819672131148,
+      "mappingEnd": 0.009946354447169181,
+      "steeringLate": -0.322506044360349
+    },
+    {
+      "condition": "rstdp",
+      "mode": "silent",
+      "seed": 7,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.23529411764705882,
+        0.2631578947368421,
+        0.5333333333333333,
+        0.2222222222222222,
+        0.7142857142857143,
+        0.4117647058823529,
+        0.29411764705882354,
+        0.4375,
+        0.2777777777777778,
+        0.5333333333333333
+      ],
+      "binHitRate": [
+        0.22727272727272727,
+        0.17391304347826086,
+        0.34782608695652173,
+        0.18181818181818182,
+        0.4166666666666667,
+        0.2916666666666667,
+        0.22727272727272727,
+        0.30434782608695654,
+        0.21739130434782608,
+        0.34782608695652173
+      ],
+      "hits": 63,
+      "misses": 166,
+      "meanRally": 0.3795180722891566,
+      "earlyRally": 0.2982456140350877,
+      "lateRally": 0.38181818181818183,
+      "mappingEnd": -0.017669731526862242,
+      "steeringLate": 0.05341197744004822
+    },
+    {
+      "condition": "rstdp",
+      "mode": "silent",
+      "seed": 8,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.5,
+        0.1,
+        0.5,
+        0.3333333333333333,
+        0.3333333333333333,
+        0.35294117647058826,
+        0.1111111111111111,
+        0.35294117647058826,
+        0.1,
+        0.4
+      ],
+      "binHitRate": [
+        0.3333333333333333,
+        0.09090909090909091,
+        0.391304347826087,
+        0.18181818181818182,
+        0.25,
+        0.2608695652173913,
+        0.18181818181818182,
+        0.22727272727272727,
+        0.09090909090909091,
+        0.34782608695652173
+      ],
+      "hits": 54,
+      "misses": 173,
+      "meanRally": 0.2947976878612717,
+      "earlyRally": 0.38181818181818183,
+      "lateRally": 0.24561403508771928,
+      "mappingEnd": -0.11082907018586674,
+      "steeringLate": -0.3387998822589462
+    },
+    {
+      "condition": "rstdp",
+      "mode": "silent",
+      "seed": 9,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.4375,
+        0.2222222222222222,
+        0.5333333333333333,
+        0.35294117647058826,
+        0.4666666666666667,
+        0.4117647058823529,
+        0.5333333333333333,
+        0.2777777777777778,
+        0.05,
+        0.5333333333333333
+      ],
+      "binHitRate": [
+        0.30434782608695654,
+        0.18181818181818182,
+        0.34782608695652173,
+        0.2608695652173913,
+        0.34782608695652173,
+        0.2608695652173913,
+        0.34782608695652173,
+        0.21739130434782608,
+        0.09090909090909091,
+        0.34782608695652173
+      ],
+      "hits": 62,
+      "misses": 166,
+      "meanRally": 0.3674698795180723,
+      "earlyRally": 0.34545454545454546,
+      "lateRally": 0.2542372881355932,
+      "mappingEnd": -0.10464157297873777,
+      "steeringLate": -0.19935795610482282
+    },
+    {
+      "condition": "rstdp",
+      "mode": "silent",
+      "seed": 10,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.21052631578947367,
+        0.4375,
+        0.35294117647058826,
+        0.2222222222222222,
+        0.6,
+        0.15,
+        0.05,
+        0.2222222222222222,
+        0.35294117647058826,
+        0.6
+      ],
+      "binHitRate": [
+        0.17391304347826086,
+        0.30434782608695654,
+        0.2608695652173913,
+        0.18181818181818182,
+        0.375,
+        0.13043478260869565,
+        0.047619047619047616,
+        0.18181818181818182,
+        0.2916666666666667,
+        0.34782608695652173
+      ],
+      "hits": 53,
+      "misses": 175,
+      "meanRally": 0.3028571428571429,
+      "earlyRally": 0.3050847457627119,
+      "lateRally": 0.3333333333333333,
+      "mappingEnd": -0.17658450754135568,
+      "steeringLate": -0.05618672102115147
+    },
+    {
+      "condition": "rstdp",
+      "mode": "silent",
+      "seed": 11,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.4117647058823529,
+        0.23529411764705882,
+        0.2777777777777778,
+        0.2222222222222222,
+        0.2777777777777778,
+        0.2777777777777778,
+        0.4666666666666667,
+        0.6,
+        0.21052631578947367,
+        0.16666666666666666
+      ],
+      "binHitRate": [
+        0.2916666666666667,
+        0.22727272727272727,
+        0.18181818181818182,
+        0.18181818181818182,
+        0.21739130434782608,
+        0.21739130434782608,
+        0.34782608695652173,
+        0.375,
+        0.13636363636363635,
+        0.18181818181818182
+      ],
+      "hits": 54,
+      "misses": 173,
+      "meanRally": 0.3063583815028902,
+      "earlyRally": 0.3157894736842105,
+      "lateRally": 0.3333333333333333,
+      "mappingEnd": -0.17784147330056865,
+      "steeringLate": -0.6322098997389555
+    },
+    {
+      "condition": "rstdp",
+      "mode": "silent",
+      "seed": 12,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.3125,
+        0.3888888888888889,
+        0.10526315789473684,
+        0.4375,
+        0.2222222222222222,
+        0.3333333333333333,
+        0.4375,
+        0.15789473684210525,
+        0.5333333333333333,
+        0.3333333333333333
+      ],
+      "binHitRate": [
+        0.30434782608695654,
+        0.21739130434782608,
+        0.09523809523809523,
+        0.30434782608695654,
+        0.21739130434782608,
+        0.21739130434782608,
+        0.30434782608695654,
+        0.13636363636363635,
+        0.34782608695652173,
+        0.25
+      ],
+      "hits": 55,
+      "misses": 173,
+      "meanRally": 0.3179190751445087,
+      "earlyRally": 0.2711864406779661,
+      "lateRally": 0.375,
+      "mappingEnd": -0.03031015540888715,
+      "steeringLate": -0.13012159076830498
+    },
+    {
+      "condition": "rstdp-shuffled",
+      "mode": "silent",
+      "seed": 1,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.6,
+        0.3125,
+        0.6,
+        0.3333333333333333,
+        0.15789473684210525,
+        0.23529411764705882,
+        0.2777777777777778,
+        0.6,
+        0.23529411764705882,
+        0.35294117647058826
+      ],
+      "binHitRate": [
+        0.375,
+        0.2727272727272727,
+        0.375,
+        0.21739130434782608,
+        0.13636363636363635,
+        0.22727272727272727,
+        0.18181818181818182,
+        0.375,
+        0.22727272727272727,
+        0.2608695652173913
+      ],
+      "hits": 61,
+      "misses": 167,
+      "meanRally": 0.3592814371257485,
+      "earlyRally": 0.4716981132075472,
+      "lateRally": 0.375,
+      "mappingEnd": 0.07712674924423335,
+      "steeringLate": -0.11552254772155339
+    },
+    {
+      "condition": "rstdp-shuffled",
+      "mode": "silent",
+      "seed": 2,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.29411764705882354,
+        0.29411764705882354,
+        0.6666666666666666,
+        0.2222222222222222,
+        0.5333333333333333,
+        0.4,
+        0.6666666666666666,
+        0.6428571428571429,
+        0.7142857142857143,
+        0.21052631578947367
+      ],
+      "binHitRate": [
+        0.22727272727272727,
+        0.22727272727272727,
+        0.4,
+        0.18181818181818182,
+        0.34782608695652173,
+        0.34782608695652173,
+        0.34782608695652173,
+        0.391304347826087,
+        0.4166666666666667,
+        0.17391304347826086
+      ],
+      "hits": 71,
+      "misses": 159,
+      "meanRally": 0.44654088050314467,
+      "earlyRally": 0.35714285714285715,
+      "lateRally": 0.4528301886792453,
+      "mappingEnd": -0.05465152976633003,
+      "steeringLate": 0.06486319807318883
+    },
+    {
+      "condition": "rstdp-shuffled",
+      "mode": "silent",
+      "seed": 3,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.2777777777777778,
+        0.5333333333333333,
+        0.2777777777777778,
+        0.29411764705882354,
+        0.4375,
+        0.2,
+        0.29411764705882354,
+        0.35294117647058826,
+        0.9166666666666666,
+        0.35294117647058826
+      ],
+      "binHitRate": [
+        0.21739130434782608,
+        0.34782608695652173,
+        0.21739130434782608,
+        0.2608695652173913,
+        0.30434782608695654,
+        0.13043478260869565,
+        0.22727272727272727,
+        0.2608695652173913,
+        0.4782608695652174,
+        0.2608695652173913
+      ],
+      "hits": 62,
+      "misses": 167,
+      "meanRally": 0.3712574850299401,
+      "earlyRally": 0.32727272727272727,
+      "lateRally": 0.49019607843137253,
+      "mappingEnd": 0.005644359887030603,
+      "steeringLate": -0.14522881247603223
+    },
+    {
+      "condition": "rstdp-shuffled",
+      "mode": "silent",
+      "seed": 4,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.2777777777777778,
+        0.29411764705882354,
+        0.3333333333333333,
+        0.21052631578947367,
+        0.35294117647058826,
+        0.6,
+        0.29411764705882354,
+        0.35294117647058826,
+        0.15789473684210525,
+        0.29411764705882354
+      ],
+      "binHitRate": [
+        0.21739130434782608,
+        0.2608695652173913,
+        0.21739130434782608,
+        0.17391304347826086,
+        0.2608695652173913,
+        0.375,
+        0.22727272727272727,
+        0.2608695652173913,
+        0.13636363636363635,
+        0.22727272727272727
+      ],
+      "hits": 54,
+      "misses": 174,
+      "meanRally": 0.3103448275862069,
+      "earlyRally": 0.26666666666666666,
+      "lateRally": 0.2711864406779661,
+      "mappingEnd": 0.00015630781288900053,
+      "steeringLate": -0.59315138758689
+    },
+    {
+      "condition": "rstdp-shuffled",
+      "mode": "silent",
+      "seed": 5,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.2777777777777778,
+        0.4375,
+        0.15,
+        0.05,
+        0.4375,
+        0.1111111111111111,
+        0.8,
+        0.2222222222222222,
+        0.3125,
+        0.2631578947368421
+      ],
+      "binHitRate": [
+        0.21739130434782608,
+        0.30434782608695654,
+        0.13043478260869565,
+        0.047619047619047616,
+        0.30434782608695654,
+        0.21739130434782608,
+        0.375,
+        0.18181818181818182,
+        0.30434782608695654,
+        0.13636363636363635
+      ],
+      "hits": 51,
+      "misses": 176,
+      "meanRally": 0.2897727272727273,
+      "earlyRally": 0.2459016393442623,
+      "lateRally": 0.29310344827586204,
+      "mappingEnd": -0.05652115458044038,
+      "steeringLate": -0.20084371498253245
+    },
+    {
+      "condition": "rstdp-shuffled",
+      "mode": "silent",
+      "seed": 6,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.4117647058823529,
+        0.4666666666666667,
+        0.15789473684210525,
+        0.35294117647058826,
+        0.29411764705882354,
+        0.15,
+        0.29411764705882354,
+        0.6428571428571429,
+        0.6,
+        0.3125
+      ],
+      "binHitRate": [
+        0.2916666666666667,
+        0.3181818181818182,
+        0.13636363636363635,
+        0.2608695652173913,
+        0.2608695652173913,
+        0.09090909090909091,
+        0.22727272727272727,
+        0.391304347826087,
+        0.375,
+        0.2727272727272727
+      ],
+      "hits": 60,
+      "misses": 167,
+      "meanRally": 0.3532934131736527,
+      "earlyRally": 0.3103448275862069,
+      "lateRally": 0.47058823529411764,
+      "mappingEnd": 0.09710390625805987,
+      "steeringLate": -0.2711698826913007
+    },
+    {
+      "condition": "rstdp-shuffled",
+      "mode": "silent",
+      "seed": 7,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        1,
+        0.2777777777777778,
+        0.5,
+        0.35294117647058826,
+        0.35294117647058826,
+        0.29411764705882354,
+        0.2777777777777778,
+        0.29411764705882354,
+        0.2777777777777778,
+        0.2777777777777778
+      ],
+      "binHitRate": [
+        0.5,
+        0.21739130434782608,
+        0.3333333333333333,
+        0.2608695652173913,
+        0.2608695652173913,
+        0.22727272727272727,
+        0.21739130434782608,
+        0.22727272727272727,
+        0.21739130434782608,
+        0.21739130434782608
+      ],
+      "hits": 62,
+      "misses": 168,
+      "meanRally": 0.36904761904761907,
+      "earlyRally": 0.5294117647058824,
+      "lateRally": 0.25,
+      "mappingEnd": -0.06640487575896015,
+      "steeringLate": -0.013346122678485785
+    },
+    {
+      "condition": "rstdp-shuffled",
+      "mode": "silent",
+      "seed": 8,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.6,
+        0.1,
+        0.2777777777777778,
+        0.4375,
+        0.15789473684210525,
+        0.15789473684210525,
+        0.4375,
+        0.7142857142857143,
+        0.15789473684210525,
+        0.29411764705882354
+      ],
+      "binHitRate": [
+        0.375,
+        0.09090909090909091,
+        0.21739130434782608,
+        0.30434782608695654,
+        0.13636363636363635,
+        0.13636363636363635,
+        0.30434782608695654,
+        0.4166666666666667,
+        0.13636363636363635,
+        0.2608695652173913
+      ],
+      "hits": 55,
+      "misses": 173,
+      "meanRally": 0.31213872832369943,
+      "earlyRally": 0.26666666666666666,
+      "lateRally": 0.375,
+      "mappingEnd": -0.17583532462244822,
+      "steeringLate": -0.40868662911354875
+    },
+    {
+      "condition": "rstdp-shuffled",
+      "mode": "silent",
+      "seed": 9,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.6428571428571429,
+        0.15789473684210525,
+        0.6,
+        0.17647058823529413,
+        0.5,
+        0.5625,
+        1,
+        0.2777777777777778,
+        0.15789473684210525,
+        0.29411764705882354
+      ],
+      "binHitRate": [
+        0.391304347826087,
+        0.13636363636363635,
+        0.375,
+        0.22727272727272727,
+        0.30434782608695654,
+        0.3333333333333333,
+        0.5,
+        0.21739130434782608,
+        0.13636363636363635,
+        0.22727272727272727
+      ],
+      "hits": 66,
+      "misses": 163,
+      "meanRally": 0.4049079754601227,
+      "earlyRally": 0.38181818181818183,
+      "lateRally": 0.3157894736842105,
+      "mappingEnd": -0.14418506991427726,
+      "steeringLate": -0.21571169733539453
+    },
+    {
+      "condition": "rstdp-shuffled",
+      "mode": "silent",
+      "seed": 10,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.5,
+        0.3333333333333333,
+        0.5,
+        0.47058823529411764,
+        0.5333333333333333,
+        0.4375,
+        0.4375,
+        0.21052631578947367,
+        0.35294117647058826,
+        0.2222222222222222
+      ],
+      "binHitRate": [
+        0.3333333333333333,
+        0.34782608695652173,
+        0.30434782608695654,
+        0.2608695652173913,
+        0.34782608695652173,
+        0.3333333333333333,
+        0.30434782608695654,
+        0.13636363636363635,
+        0.2608695652173913,
+        0.18181818181818182
+      ],
+      "hits": 65,
+      "misses": 165,
+      "meanRally": 0.3939393939393939,
+      "earlyRally": 0.4716981132075472,
+      "lateRally": 0.2711864406779661,
+      "mappingEnd": -0.08321132319278146,
+      "steeringLate": -0.034861121361970136
+    },
+    {
+      "condition": "rstdp-shuffled",
+      "mode": "silent",
+      "seed": 11,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.15,
+        0.5333333333333333,
+        0.23529411764705882,
+        0.2,
+        0.2222222222222222,
+        0.4375,
+        0.5,
+        0.375,
+        0.35294117647058826,
+        0.15789473684210525
+      ],
+      "binHitRate": [
+        0.13043478260869565,
+        0.34782608695652173,
+        0.2608695652173913,
+        0.09090909090909091,
+        0.18181818181818182,
+        0.30434782608695654,
+        0.3333333333333333,
+        0.30434782608695654,
+        0.22727272727272727,
+        0.13636363636363635
+      ],
+      "hits": 53,
+      "misses": 174,
+      "meanRally": 0.3045977011494253,
+      "earlyRally": 0.3050847457627119,
+      "lateRally": 0.3103448275862069,
+      "mappingEnd": -0.2168979396294426,
+      "steeringLate": -0.04613439366463141
+    },
+    {
+      "condition": "rstdp-shuffled",
+      "mode": "silent",
+      "seed": 12,
+      "durationMs": 1200000,
+      "binMs": 120000,
+      "binRally": [
+        0.35294117647058826,
+        0.2777777777777778,
+        0.2222222222222222,
+        0.7692307692307693,
+        0.15,
+        0.15789473684210525,
+        0.2222222222222222,
+        0.15789473684210525,
+        0.1,
+        0.8333333333333334
+      ],
+      "binHitRate": [
+        0.2608695652173913,
+        0.21739130434782608,
+        0.18181818181818182,
+        0.43478260869565216,
+        0.13043478260869565,
+        0.13636363636363635,
+        0.18181818181818182,
+        0.13636363636363635,
+        0.09090909090909091,
+        0.5
+      ],
+      "hits": 52,
+      "misses": 174,
+      "meanRally": 0.28735632183908044,
+      "earlyRally": 0.3333333333333333,
+      "lateRally": 0.2807017543859649,
+      "mappingEnd": -0.17871147445756996,
+      "steeringLate": -0.065264191871649
+    }
+  ]
+}
