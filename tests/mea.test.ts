@@ -81,7 +81,7 @@ describe('sensory encoder', () => {
 
 describe('motor decoder', () => {
   it('converges to the population rate and outputs the up/down difference', () => {
-    const dec = new MotorDecoder({ tauMs: 50, fullScaleHz: 10 }, 100, 100);
+    const dec = new MotorDecoder({ tauMs: 50, fullScaleHz: 10, baselineTauMs: 0 }, 100, 100);
     // Up population: 1 spike/ms across 100 neurons = 10 Hz per neuron. Down silent.
     for (let t = 0; t < 1000; t++) dec.update(1, 0);
     expect(dec.rateUp).toBeCloseTo(10, 1);
@@ -92,5 +92,23 @@ describe('motor decoder', () => {
     expect(dec.command()).toBeCloseTo(0.5, 1);
     for (let t = 0; t < 1000; t++) dec.update(0.5, 0.5);
     expect(Math.abs(dec.command())).toBeLessThan(0.01);
+  });
+});
+
+describe('calibrated motor decoder', () => {
+  it('cancels a fixed imbalance between the motor regions but still passes changes', () => {
+    const dec = new MotorDecoder({ tauMs: 50, fullScaleHz: 10, baselineTauMs: 1000 }, 100, 100);
+    // Down region constantly 5 Hz busier than up.
+    for (let t = 0; t < 10_000; t++) dec.update(0.5, 1);
+    expect(Math.abs(dec.command())).toBeLessThan(0.01);
+    // A sudden extra burst in the up region still moves the paddle up.
+    for (let t = 0; t < 100; t++) dec.update(1.5, 1);
+    expect(dec.command()).toBeLessThan(-0.3);
+  });
+
+  it('is a plain difference decoder when the baseline is off', () => {
+    const dec = new MotorDecoder({ tauMs: 50, fullScaleHz: 10, baselineTauMs: 0 }, 100, 100);
+    for (let t = 0; t < 10_000; t++) dec.update(0.5, 1);
+    expect(dec.command()).toBeCloseTo(0.5, 2);
   });
 });

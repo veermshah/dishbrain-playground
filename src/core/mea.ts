@@ -126,11 +126,18 @@ export interface DecoderParams {
   tauMs: number;
   /** Rate difference (Hz per neuron) that maps to full paddle speed. */
   fullScaleHz: number;
+  /**
+   * If > 0, subtract a slow running average (this time constant, ms) of the
+   * down-minus-up rate difference, so a fixed imbalance between the two motor
+   * populations does not pin the paddle to one wall. 0 = off.
+   */
+  baselineTauMs: number;
 }
 
 export const defaultDecoderParams: DecoderParams = {
   tauMs: 100,
   fullScaleHz: 4,
+  baselineTauMs: 0,
 };
 
 /**
@@ -141,6 +148,8 @@ export const defaultDecoderParams: DecoderParams = {
 export class MotorDecoder {
   rateUp = 0;
   rateDown = 0;
+  /** Slow average of rateDown - rateUp (only used when baselineTauMs > 0). */
+  baseline = 0;
   readonly p: DecoderParams;
   readonly nUp: number;
   readonly nDown: number;
@@ -150,7 +159,9 @@ export class MotorDecoder {
     this.nUp = nUp;
     this.nDown = nDown;
     this.decay = Math.exp(-1 / p.tauMs);
+    this.baselineDecay = p.baselineTauMs > 0 ? Math.exp(-1 / p.baselineTauMs) : 1;
   }
+  private readonly baselineDecay: number;
 
   /** Feed spike counts for one 1 ms step. */
   update(upSpikes: number, downSpikes: number): void {
@@ -158,15 +169,20 @@ export class MotorDecoder {
     this.rateUp = this.decay * this.rateUp + k * ((upSpikes * 1000) / Math.max(1, this.nUp));
     this.rateDown =
       this.decay * this.rateDown + k * ((downSpikes * 1000) / Math.max(1, this.nDown));
+    if (this.p.baselineTauMs > 0) {
+      const b = this.baselineDecay;
+      this.baseline = b * this.baseline + (1 - b) * (this.rateDown - this.rateUp);
+    }
   }
 
   command(): number {
-    const c = (this.rateDown - this.rateUp) / this.p.fullScaleHz;
+    const c = (this.rateDown - this.rateUp - this.baseline) / this.p.fullScaleHz;
     return c < -1 ? -1 : c > 1 ? 1 : c;
   }
 
   reset(): void {
     this.rateUp = 0;
     this.rateDown = 0;
+    this.baseline = 0;
   }
 }
