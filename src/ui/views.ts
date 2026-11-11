@@ -7,11 +7,13 @@ import { fmtClock, heat, niceTicks, rgba, surface, type Theme } from './canvas.t
 export const modeColor = (th: Theme, m: FeedbackMode): string =>
   m === 'dishbrain'
     ? th.dishbrain
-    : m === 'predictable'
-      ? th.predictable
-      : m === 'unpredictable'
-        ? th.unpredictable
-        : th.silent;
+    : m === 'avoidance'
+      ? th.avoidance
+      : m === 'predictable'
+        ? th.predictable
+        : m === 'unpredictable'
+          ? th.unpredictable
+          : th.silent;
 
 const roleColor = (th: Theme, r: Role): string =>
   r === 'sensory' ? th.sensory : r === 'up' ? th.up : r === 'down' ? th.down : th.faint;
@@ -150,7 +152,13 @@ export function drawMea(
       ctx.fill();
       if (stim && stim[e]) {
         ctx.strokeStyle =
-          stim[e] === 3 ? th.predictable : stim[e] === 2 ? th.unpredictable : th.text;
+          stim[e] === 4
+            ? th.avoidance
+            : stim[e] === 3
+              ? th.predictable
+              : stim[e] === 2
+                ? th.unpredictable
+                : th.text;
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.arc(x + cell / 2, y + cell / 2, cell * 0.28, 0, Math.PI * 2);
@@ -562,7 +570,7 @@ export function drawCurves(
   for (const c of conds) {
     ctx.fillStyle = modeColor(th, c.mode);
     ctx.fillRect(lx, m.t + 2, 10, 3);
-    ctx.fillText(`${c.mode} (n=${c.seeds})`, lx + 14, m.t + 7);
-    lx += ctx.measureText(`${c.mode} (n=${c.seeds})`).width + 30;
+    ctx.fillText(`${c.condition} (n=${c.seeds})`, lx + 14, m.t + 7);
+    lx += ctx.measureText(`${c.condition} (n=${c.seeds})`).width + 30;
   }
 }

@@ -112,6 +112,17 @@
         >
           <span class="dot dot-silent" aria-hidden="true"></span>Silent
         </button>
+        <span class="seg-sep ctl-label" aria-hidden="true">learning</span>
+        <button
+          type="button"
+          role="radio"
+          class="seg-btn"
+          data-mode="avoidance"
+          aria-checked="false"
+          title="Learning by stimulation avoidance (5)"
+        >
+          <span class="dot dot-avoidance" aria-hidden="true"></span>Avoidance
+        </button>
       </div>
       <div class="transport">
         <button
@@ -286,6 +297,7 @@
             unpredictable</label
           >
           <label><input type="checkbox" name="mode" value="silent" checked /> silent</label>
+          <label><input type="checkbox" name="mode" value="avoidance" /> avoidance</label>
         </fieldset>
         <button id="exp-run" class="btn primary" type="submit">Run</button>
         <button id="exp-cancel" class="btn" type="button" disabled>Cancel</button>
@@ -314,7 +326,7 @@
         <a href="https://github.com/veermshah/dishbrain-playground">Source on GitHub</a>.
       </p>
       <p class="dim small mono">
-        Keys: Space pause · S step · 1–4 mode · +/− speed · P STDP · R reset · T theme · ? help
+        Keys: Space pause · S step · 1–5 mode · +/− speed · P STDP · R reset · T theme · ? help
       </p>
     </footer>
 
@@ -372,6 +384,19 @@
               <dd>
                 Hits get nothing. After a miss, the game pauses for 4 s with no stimulation, then
                 resets. This matches the paper's "silent" control.
+              </dd>
+              <dt>Avoidance (learning)</dt>
+              <dd>
+                Learning by stimulation avoidance. While the ball approaches and the paddle is out
+                of line, the sensory electrodes for the ball's position get 200 Hz random pulses.
+                They stop within a millisecond of the motor regions steering towards the ball, so
+                STDP sees "this move made the input stop" inside its 20 ms window.
+              </dd>
+              <dt>R-STDP presets</dt>
+              <dd>
+                Reward-modulated STDP: spike pairings are stored in 1 s eligibility traces and only
+                become weight changes when a hit (+1) or miss (−1) arrives. The shuffled control
+                hands out the same rewards in random order.
               </dd>
               <dt>STDP</dt>
               <dd>Turns plasticity on or off. With it off, nothing can be learned.</dd>

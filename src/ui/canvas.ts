@@ -15,6 +15,7 @@ export interface Theme {
   exc: string;
   inh: string;
   dishbrain: string;
+  avoidance: string;
   predictable: string;
   unpredictable: string;
   silent: string;
@@ -41,6 +42,7 @@ export function readTheme(): Theme {
     exc: v('--exc'),
     inh: v('--inh'),
     dishbrain: v('--dishbrain'),
+    avoidance: v('--avoidance'),
     predictable: v('--predictable'),
     unpredictable: v('--unpredictable'),
     silent: v('--silent'),

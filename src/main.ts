@@ -219,7 +219,7 @@ document.addEventListener('keydown', (e) => {
   } else if (k === 's' || k === 'S') {
     if (!paused) setPaused(true);
     send({ type: 'step', ms: 100 });
-  } else if (k === '1' || k === '2' || k === '3' || k === '4') {
+  } else if (k >= '1' && k <= '5' && k.length === 1) {
     setMode(FEEDBACK_MODES[Number(k) - 1]);
   } else if (k === '+' || k === '=') {
     setSpeed(speedIdx + 1);
@@ -335,13 +335,21 @@ function renderSummary(s: ExperimentSummary, binMs: number) {
   const rows = s.conditions
     .map(
       (c) =>
-        `<tr><td><span class="dot dot-${c.mode}"></span> ${c.mode}</td><td>${f(c.earlyRally.mean)}</td><td>${f(c.lateRally.mean)} <span class="dim">[${f(c.lateRally.lo)}, ${f(c.lateRally.hi)}]</span></td><td>${f(c.improvement.mean)}</td></tr>`,
+        `<tr><td><span class="dot dot-${c.mode}"></span> ${c.condition}</td><td>${f(c.earlyRally.mean)}</td><td>${f(c.lateRally.mean)} <span class="dim">[${f(c.lateRally.lo)}, ${f(c.lateRally.hi)}]</span></td><td>${f(c.improvement.mean)}</td></tr>`,
     )
     .join('');
   const comps = s.comparisons
     .map(
       (k) =>
-        `<tr><td>${k.a} vs ${k.b}</td><td>${k.metric === 'lateRally' ? 'late rally' : 'late − early'}</td><td class="${k.test.p < 0.05 ? 'sig' : ''}">${f(k.test.p)}</td></tr>`,
+        `<tr><td>${k.a} vs ${k.b}</td><td>${
+          {
+            lateRally: 'late rally',
+            improvement: 'late − early',
+            meanRally: 'mean rally',
+            steeringLate: 'steering',
+            mappingEnd: 'mapping',
+          }[k.metric]
+        }</td><td class="${k.test.p < 0.05 ? 'sig' : ''}">${f(k.test.p)}</td></tr>`,
     )
     .join('');
   expTable.innerHTML = `

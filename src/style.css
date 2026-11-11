@@ -17,6 +17,7 @@
   --exc: #7cffb2;
   --inh: #b48cff;
   --dishbrain: #ffe27a;
+  --avoidance: #4fd1ff;
   --predictable: #7cffb2;
   --unpredictable: #ff6b5f;
   --silent: #8fa3c7;
@@ -46,6 +47,7 @@
   --exc: #0d8a55;
   --inh: #6c45c9;
   --dishbrain: #8a6400;
+  --avoidance: #0a7fb0;
   --predictable: #0d8a55;
   --unpredictable: #d23b2f;
   --silent: #4f6690;
@@ -272,6 +274,12 @@ button {
 }
 .seg-btn[data-mode='dishbrain'][aria-checked='true'] {
   color: var(--dishbrain);
+}
+.seg-btn[data-mode='avoidance'][aria-checked='true'] {
+  color: var(--avoidance);
+}
+.dot-avoidance {
+  background: var(--avoidance);
 }
 .seg-sep {
   margin: 0 2px 0 8px;
