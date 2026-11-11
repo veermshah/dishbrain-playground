@@ -1,14 +1,21 @@
 | Condition | Seeds | Mean rally (all) | Early third | Late third | Late - early |
 |---|---|---|---|---|---|
-| predictable | 12 | 0.307 [0.290, 0.324] | 0.311 [0.273, 0.348] | 0.309 [0.252, 0.366] | -0.002 [-0.080, 0.076] |
-| unpredictable | 12 | 0.304 [0.282, 0.327] | 0.290 [0.263, 0.316] | 0.337 [0.290, 0.385] | 0.048 [-0.015, 0.110] |
-| silent | 12 | 0.309 [0.292, 0.326] | 0.318 [0.279, 0.358] | 0.314 [0.254, 0.373] | -0.005 [-0.088, 0.078] |
+| dishbrain | 12 | 0.301 [0.261, 0.340] | 0.284 [0.232, 0.336] | 0.331 [0.245, 0.417] | 0.047 [-0.031, 0.124] |
+| predictable | 12 | 0.312 [0.292, 0.331] | 0.308 [0.265, 0.350] | 0.297 [0.243, 0.351] | -0.010 [-0.082, 0.062] |
+| unpredictable | 12 | 0.300 [0.264, 0.336] | 0.293 [0.238, 0.348] | 0.325 [0.247, 0.402] | 0.032 [-0.040, 0.104] |
+| silent | 12 | 0.309 [0.286, 0.331] | 0.315 [0.268, 0.361] | 0.291 [0.239, 0.343] | -0.024 [-0.091, 0.043] |
 
 | Comparison | Metric | Mann-Whitney U | p (two-sided) |
 |---|---|---|---|
-| predictable vs unpredictable | lateRally | 52.0 | 0.260 (normal) |
-| predictable vs unpredictable | improvement | 52.0 | 0.266 (exact) |
-| predictable vs silent | lateRally | 68.5 | 0.862 (normal) |
-| predictable vs silent | improvement | 72.5 | 1.000 (normal) |
-| unpredictable vs silent | lateRally | 87.0 | 0.402 (normal) |
+| dishbrain vs predictable | lateRally | 80.0 | 0.665 (normal) |
+| dishbrain vs predictable | improvement | 87.0 | 0.410 (exact) |
+| dishbrain vs unpredictable | lateRally | 72.0 | 1.000 (normal) |
+| dishbrain vs unpredictable | improvement | 76.0 | 0.840 (normal) |
+| dishbrain vs silent | lateRally | 80.0 | 0.665 (normal) |
+| dishbrain vs silent | improvement | 93.0 | 0.242 (exact) |
+| predictable vs unpredictable | lateRally | 62.5 | 0.603 (normal) |
+| predictable vs unpredictable | improvement | 61.0 | 0.551 (exact) |
+| predictable vs silent | lateRally | 77.0 | 0.795 (normal) |
+| predictable vs silent | improvement | 76.0 | 0.840 (normal) |
+| unpredictable vs silent | lateRally | 80.5 | 0.644 (normal) |
 | unpredictable vs silent | improvement | 89.0 | 0.347 (exact) |
