@@ -62,7 +62,7 @@ describe('closed loop', () => {
   });
 
   it('predictable feedback is a synchronous 100 Hz burst on all sensory electrodes', () => {
-    const { sim, electrodes, times } = feedbackPulses('predictable', 2000);
+    const { sim, electrodes, times } = feedbackPulses('predictable', 4000);
     expect([...electrodes].sort((x, y) => x - y)).toEqual(
       [...sim.layout.sensory].sort((x, y) => x - y),
     );
@@ -72,14 +72,14 @@ describe('closed loop', () => {
   });
 
   it('unpredictable feedback hits random subsets at random times across the window', () => {
-    const { sim, electrodes, times } = feedbackPulses('unpredictable', 2000);
+    const { sim, electrodes, times } = feedbackPulses('unpredictable', 4000);
     expect(times.length).toBeGreaterThan(2);
     expect(times[times.length - 1]).toBeGreaterThan(200);
     for (const e of electrodes) expect(sim.layout.roles[e]).toBe('sensory');
   });
 
   it('silent feedback delivers no stimulation', () => {
-    expect(feedbackPulses('silent', 2000).pulses).toBe(0);
+    expect(feedbackPulses('silent', 4000).pulses).toBe(0);
   });
 
   it('drives the paddle from motor activity', () => {
@@ -93,6 +93,86 @@ describe('closed loop', () => {
     }
     expect(moved).toBeGreaterThan(100);
     expect(sim.pong.s.paddleY).not.toBe(y0);
+  });
+});
+
+/** Put the loop one step away from a guaranteed hit and step through it. */
+function forceHit(sim: ClosedLoop) {
+  sim.pong.s = { ballX: 0.0152, ballY: 0.5, vx: -0.5, vy: 0, paddleY: 0.5 };
+  sim.pong.p.paddleSpeed = 0;
+  sim.step();
+  expect(sim.lastEvent).toBe('hit');
+}
+
+/** Collect which feedback codes (2 = after miss, 3 = after hit) appear over `ms`. */
+function codesAfter(sim: ClosedLoop, ms: number) {
+  const times: Record<number, number[]> = { 2: [], 3: [] };
+  const electrodes: Record<number, Set<number>> = { 2: new Set(), 3: new Set() };
+  for (let t = 0; t < ms; t++) {
+    sim.step();
+    const seen = new Set<number>();
+    sim.stimulated.forEach((v, e) => {
+      if (v >= 2) {
+        seen.add(v);
+        electrodes[v].add(e);
+      }
+    });
+    for (const v of seen) times[v].push(t);
+  }
+  return { times, electrodes };
+}
+
+describe('dishbrain protocol routing', () => {
+  it('defaults to the paper protocol with a 4 s window', () => {
+    const cfg = defaultConfig();
+    expect(cfg.mode).toBe('dishbrain');
+    expect(cfg.feedback.windowMs).toBe(4000);
+  });
+
+  it('routes a hit to the predictable burst without pausing the game', () => {
+    const sim = new ClosedLoop(smallConfig('dishbrain'), 7);
+    forceHit(sim);
+    expect(sim.feedbackLeft).toBe(0);
+    const x0 = sim.pong.s.ballX;
+    const { times, electrodes } = codesAfter(sim, 300);
+    expect(sim.pong.s.ballX).not.toBe(x0); // play continued
+    expect(times[2]).toHaveLength(0);
+    expect(times[3]).toHaveLength(10);
+    for (let k = 1; k < times[3].length; k++) expect(times[3][k] - times[3][k - 1]).toBe(10);
+    expect(times[3][9]).toBeLessThan(100);
+    expect([...electrodes[3]].sort((a, b) => a - b)).toEqual(
+      [...sim.layout.sensory].sort((a, b) => a - b),
+    );
+  });
+
+  it('routes a miss to 4 s of unpredictable stimulation and no burst', () => {
+    const sim = new ClosedLoop(smallConfig('dishbrain'), 7);
+    forceMiss(sim);
+    expect(sim.feedbackLeft).toBe(4000);
+    const { times } = codesAfter(sim, 4000);
+    expect(times[3]).toHaveLength(0);
+    expect(times[2].length).toBeGreaterThan(5);
+    expect(times[2][times[2].length - 1]).toBeGreaterThan(2000);
+    expect(sim.feedbackLeft).toBe(0);
+  });
+
+  it('cancels a running hit burst when the next ball is missed', () => {
+    const sim = new ClosedLoop(smallConfig('dishbrain'), 8);
+    forceHit(sim);
+    sim.step();
+    forceMiss(sim);
+    const { times } = codesAfter(sim, 200);
+    expect(times[3]).toHaveLength(0);
+  });
+
+  it('ablation modes give no feedback after a hit', () => {
+    for (const mode of ['predictable', 'unpredictable', 'silent'] as const) {
+      const sim = new ClosedLoop(smallConfig(mode), 7);
+      forceHit(sim);
+      const { times } = codesAfter(sim, 300);
+      expect(times[2]).toHaveLength(0);
+      expect(times[3]).toHaveLength(0);
+    }
   });
 });
 

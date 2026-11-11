@@ -16,15 +16,24 @@ import { Pong, defaultPongParams, type PongParams, type PongEvent } from './pong
 import { Rng } from './rng.ts';
 
 /**
- * What the culture receives right after the paddle misses the ball.
- *  - predictable:   a structured, synchronous burst on every sensory electrode
- *                   (100 Hz for 100 ms, the shape of DishBrain's predictable stimulus)
- *  - unpredictable: random pulses on random sensory electrodes for the whole
- *                   feedback window (DishBrain's unpredictable stimulus)
- *  - silent:        no stimulation at all during the feedback window
+ * Feedback protocol.
+ *  - dishbrain:     the protocol of Kagan et al. (2022). After a hit, a predictable
+ *                   synchronous burst on every sensory electrode (100 Hz for 100 ms)
+ *                   while play continues. After a miss, unpredictable stimulation
+ *                   (random sensory sites, 5 Hz, double amplitude) for the 4 s window.
+ *
+ * Ablations, which change only what happens after a miss (hits get nothing):
+ *  - predictable:   the 100 Hz / 100 ms synchronous burst on every sensory electrode
+ *  - unpredictable: random pulses on random sensory electrodes for the whole window
+ *  - silent:        no stimulation during the window, then the game resets
  */
-export type FeedbackMode = 'predictable' | 'unpredictable' | 'silent';
-export const FEEDBACK_MODES: FeedbackMode[] = ['predictable', 'unpredictable', 'silent'];
+export type FeedbackMode = 'dishbrain' | 'predictable' | 'unpredictable' | 'silent';
+export const FEEDBACK_MODES: FeedbackMode[] = [
+  'dishbrain',
+  'predictable',
+  'unpredictable',
+  'silent',
+];
 
 export interface StimParams {
   /** Current injected into each neuron of a stimulated electrode. */
@@ -34,7 +43,7 @@ export interface StimParams {
 }
 
 export interface FeedbackParams {
-  /** Length of the post-miss window (game paused), ms. */
+  /** Length of the post-miss window (game paused), ms. 4 s in the paper. */
   windowMs: number;
   /** Multiplier on feedback pulse amplitude. */
   strength: number;
@@ -59,7 +68,7 @@ export interface SimConfig {
 }
 
 export const defaultFeedbackParams: FeedbackParams = {
-  windowMs: 2000,
+  windowMs: 4000,
   strength: 1,
   predictableHz: 100,
   predictableMs: 100,
@@ -68,7 +77,7 @@ export const defaultFeedbackParams: FeedbackParams = {
   unpredictableGain: 2,
 };
 
-export function defaultConfig(mode: FeedbackMode = 'predictable'): SimConfig {
+export function defaultConfig(mode: FeedbackMode = 'dishbrain'): SimConfig {
   return {
     network: { ...defaultNetworkParams },
     pong: { ...defaultPongParams },
@@ -104,7 +113,10 @@ export class ClosedLoop {
 
   /** Spikes per electrode accumulated since last `drainElectrodeCounts`. */
   readonly electrodeCounts: Float32Array = new Float32Array(N_ELECTRODES);
-  /** Electrodes stimulated on the last step (1 = sensory pulse, 2 = feedback). */
+  /**
+   * Electrodes stimulated on the last step:
+   * 1 = sensory pulse, 2 = post-miss feedback, 3 = post-hit feedback.
+   */
   readonly stimulated: Uint8Array = new Uint8Array(N_ELECTRODES);
 
   mode: FeedbackMode;
@@ -122,6 +134,8 @@ export class ClosedLoop {
   private readonly stimAmp: Float32Array = new Float32Array(N_ELECTRODES);
   private readonly rng: Rng;
   private feedbackElapsed = 0;
+  /** ms since the last hit-triggered burst started, or -1 if none is running. */
+  private hitBurstElapsed = -1;
 
   constructor(cfg: SimConfig, seed: number) {
     this.cfg = cfg;
@@ -166,12 +180,13 @@ export class ClosedLoop {
     if (this.feedbackLeft > 0) {
       this.feedbackStep();
     } else {
+      if (this.hitBurstElapsed >= 0) this.hitBurstStep();
       const s = pong.s;
       const place = this.encoder.tick(s.ballY - s.paddleY, s.ballX);
       if (place >= 0) {
         for (const e of this.layout.sensoryByPlace[place]) {
           this.pulse(e, cfg.stim.amp);
-          stimulated[e] = 1;
+          if (!stimulated[e]) stimulated[e] = 1;
         }
       }
     }
@@ -213,7 +228,9 @@ export class ClosedLoop {
       if (ev === 'hit') {
         this.hits++;
         this.currentRally++;
+        if (this.mode === 'dishbrain') this.hitBurstElapsed = 0;
       } else if (ev === 'miss') {
+        this.hitBurstElapsed = -1;
         this.misses++;
         this.rallies.push({ t: this.t, hits: this.currentRally });
         this.currentRally = 0;
@@ -222,6 +239,21 @@ export class ClosedLoop {
       }
     }
     this.t++;
+  }
+
+  /** Predictable burst after a hit (dishbrain mode); the game keeps running. */
+  private hitBurstStep(): void {
+    const f = this.cfg.feedback;
+    const period = Math.max(1, Math.round(1000 / f.predictableHz));
+    if (this.hitBurstElapsed % period === 0) {
+      const amp = this.cfg.stim.amp * f.strength;
+      for (const e of this.layout.sensory) {
+        this.pulse(e, amp);
+        this.stimulated[e] = 3;
+      }
+    }
+    this.hitBurstElapsed++;
+    if (this.hitBurstElapsed >= f.predictableMs) this.hitBurstElapsed = -1;
   }
 
   private feedbackStep(): void {
@@ -238,7 +270,7 @@ export class ClosedLoop {
           }
         }
       }
-    } else if (this.mode === 'unpredictable') {
+    } else if (this.mode === 'unpredictable' || this.mode === 'dishbrain') {
       if (this.rng.next() < f.unpredictableHz / 1000) {
         for (const e of sensory) {
           if (this.rng.next() < f.unpredictableFraction) {
