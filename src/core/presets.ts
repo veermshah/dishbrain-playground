@@ -1,6 +1,13 @@
 import type { SimConfig } from './closedLoop.ts';
 
-export type PresetName = 'dishbrain' | 'highPlasticity' | 'noPlasticity';
+export type PresetName =
+  | 'dishbrain'
+  | 'highPlasticity'
+  | 'noPlasticity'
+  | 'rstdp'
+  | 'rstdpShuffled'
+  | 'calibrated'
+  | 'learningRig';
 
 export interface Preset {
   label: string;
@@ -22,6 +29,43 @@ export const PRESETS: Record<PresetName, Preset> = {
       cfg.network.aPlus *= 2.5;
       cfg.network.aMinus *= 2.5;
       cfg.network.tauStdp = 40;
+    },
+  },
+  rstdp: {
+    label: 'Reward-modulated STDP',
+    description:
+      'STDP writes into 1 s eligibility traces; each hit (+1) or miss (-1), minus the recent average reward, moves every synapse in proportion to its trace.',
+    apply: (cfg) => {
+      cfg.network.rule = 'rstdp';
+      cfg.reward.mode = 'contingent';
+      cfg.reward.baselineEvents = 20;
+    },
+  },
+  rstdpShuffled: {
+    label: 'R-STDP, shuffled reward (control)',
+    description:
+      'Same as R-STDP, but each reward is drawn from earlier outcomes at random, so it carries no information about the move.',
+    apply: (cfg) => {
+      cfg.network.rule = 'rstdp';
+      cfg.reward.mode = 'shuffled';
+      cfg.reward.baselineEvents = 20;
+    },
+  },
+  calibrated: {
+    label: 'Calibrated motor decode',
+    description:
+      'Subtracts a 10 s running average of the up/down rate difference, so a fixed imbalance between the motor regions cannot pin the paddle to a wall.',
+    apply: (cfg) => {
+      cfg.decoder.baselineTauMs = 10_000;
+    },
+  },
+  learningRig: {
+    label: 'Learning rig',
+    description:
+      'Calibrated motor decode plus high plasticity. The shared base for every condition in the "Making it learn" comparison, chosen on development seeds 100-111.',
+    apply: (cfg) => {
+      PRESETS.calibrated.apply(cfg);
+      PRESETS.highPlasticity.apply(cfg);
     },
   },
   noPlasticity: {

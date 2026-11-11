@@ -196,9 +196,9 @@ describe('experiment runner', () => {
       runSession({ ...spec, mode: 'predictable', seed: 5 }),
     ]);
     expect(summary.conditions.map((c) => c.mode)).toEqual(['silent', 'predictable']);
-    expect(summary.comparisons.length).toBe(2);
+    expect(summary.comparisons.length).toBe(4);
     const csv = resultsToCsv([a]);
-    expect(csv.split('\n')[0]).toBe('mode,seed,bin,bin_start_s,mean_rally,hit_rate');
+    expect(csv.split('\n')[0]).toBe('condition,mode,seed,bin,bin_start_s,mean_rally,hit_rate');
     expect(csv.trim().split('\n')).toHaveLength(5);
   });
 });
