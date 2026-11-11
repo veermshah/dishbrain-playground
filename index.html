@@ -410,10 +410,9 @@
             </dl>
             <h3>Honest caveat</h3>
             <p>
-              This is a toy model, not a culture. In my runs, plain STDP does not learn under any of
-              these conditions, including the paper's own protocol: rally length stays at chance and
-              matches a network with plasticity switched off. The README has the numbers and my
-              reasons for why.
+              This is a toy model, not a culture. Plain STDP does not learn under the paper's
+              protocol or any of its ablations. The avoidance loop does learn on held-out seeds,
+              though modestly, and reward-modulated STDP does not. The README has the numbers.
             </p>
             <h3>References</h3>
             <ol class="refs">
@@ -432,6 +431,14 @@
               <li>
                 Bi G, Poo M (1998). Synaptic modifications in cultured hippocampal neurons.
                 <i>J. Neuroscience</i> 18(24), 10464–10472.
+              </li>
+              <li>
+                Izhikevich EM (2007). Solving the distal reward problem through linkage of STDP and
+                dopamine signaling. <i>Cerebral Cortex</i> 17(10), 2443–2452.
+              </li>
+              <li>
+                Sinapayen L, Masumori A, Ikegami T (2017). Learning by stimulation avoidance.
+                <i>PLoS ONE</i> 12(2), e0170388.
               </li>
               <li>
                 Friston K (2010). The free-energy principle: a unified brain theory?
