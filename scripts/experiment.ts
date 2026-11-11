@@ -2,6 +2,11 @@
  * Headless comparison of feedback conditions.
  *
  *   npm run experiment -- --seeds 10 --minutes 20 --bin 120
+ *   npm run experiment -- --conditions dishbrain,avoidance,avoidance:noPlasticity,silent:rstdp
+ *
+ * A condition is a feedback mode, optionally followed by ":preset" (several
+ * presets can be chained with "+"), optionally named with "name=". Without --conditions every mode runs with
+ * --preset. --seed-start picks which seeds run (seed-start .. seed-start+seeds-1).
  *
  * Runs every (condition, seed) pair in a pool of worker threads, then
  * writes outputs/experiment.json, outputs/experiment.csv and prints a
@@ -28,6 +33,8 @@ interface Options {
   binSeconds: number;
   preset: PresetName;
   modes: FeedbackMode[];
+  conditions: string[] | null;
+  seedStart: number;
   out: string;
   threads: number;
 }
@@ -39,6 +46,8 @@ function parseArgs(argv: string[]): Options {
     binSeconds: 120,
     preset: 'dishbrain',
     modes: [...FEEDBACK_MODES],
+    conditions: null,
+    seedStart: 1,
     out: 'outputs',
     threads: Math.max(1, availableParallelism() - 1),
   };
@@ -66,6 +75,14 @@ function parseArgs(argv: string[]): Options {
         opts.modes = value.split(',') as FeedbackMode[];
         i++;
         break;
+      case '--conditions':
+        opts.conditions = value.split(',');
+        i++;
+        break;
+      case '--seed-start':
+        opts.seedStart = Number(value);
+        i++;
+        break;
       case '--out':
         opts.out = value;
         i++;
@@ -86,19 +103,34 @@ const fmt = (x: number, d = 3) => (Number.isFinite(x) ? x.toFixed(d) : 'n/a');
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
   const config = applyPreset(defaultConfig(), opts.preset);
+  const conditions = (opts.conditions ?? opts.modes).map((entry) => {
+    // "name=mode:presetA+presetB" or "mode:presetA" or "mode"
+    const [label, body] = entry.includes('=') ? entry.split('=') : [entry, entry];
+    const [mode, presets] = body.split(':');
+    if (!FEEDBACK_MODES.includes(mode as FeedbackMode)) throw new Error(`unknown mode ${mode}`);
+    let cfg = opts.conditions ? defaultConfig() : config;
+    if (opts.conditions && presets) {
+      for (const p of presets.split('+')) {
+        if (!(p in PRESETS)) throw new Error(`unknown preset ${p}`);
+        cfg = applyPreset(cfg, p as PresetName);
+      }
+    }
+    return { label, mode: mode as FeedbackMode, config: cfg };
+  });
   const specs: RunSpec[] = [];
-  for (const mode of opts.modes)
-    for (let s = 1; s <= opts.seeds; s++)
+  for (const c of conditions)
+    for (let s = opts.seedStart; s < opts.seedStart + opts.seeds; s++)
       specs.push({
-        mode,
+        mode: c.mode,
+        label: c.label,
         seed: s,
         durationMs: opts.minutes * 60_000,
         binMs: opts.binSeconds * 1000,
-        config,
+        config: c.config,
       });
 
   console.log(
-    `Running ${specs.length} sessions (${opts.modes.join(', ')} x ${opts.seeds} seeds, ` +
+    `Running ${specs.length} sessions (${conditions.map((c) => c.label).join(', ')} x ${opts.seeds} seeds from ${opts.seedStart}, ` +
       `${opts.minutes} sim-min each, preset "${opts.preset}") on ${opts.threads} threads...`,
   );
   const t0 = performance.now();
@@ -132,18 +164,20 @@ async function main() {
   mkdirSync(opts.out, { recursive: true });
   writeFileSync(
     `${opts.out}/experiment.json`,
-    JSON.stringify({ options: opts, config, wallSeconds: wall, summary, results }, null, 2),
+    JSON.stringify({ options: opts, conditions, wallSeconds: wall, summary, results }, null, 2),
   );
   writeFileSync(`${opts.out}/experiment.csv`, resultsToCsv(results));
 
   const lines: string[] = [];
-  lines.push(`| Condition | Seeds | Mean rally (all) | Early third | Late third | Late - early |`);
-  lines.push(`|---|---|---|---|---|---|`);
+  lines.push(
+    `| Condition | Seeds | Mean rally (all) | Early third | Late third | Late - early | Steering (late) | Mapping index (end) |`,
+  );
+  lines.push(`|---|---|---|---|---|---|---|---|`);
   for (const c of summary.conditions) {
     const ci = (m: { mean: number; lo: number; hi: number }) =>
       `${fmt(m.mean)} [${fmt(m.lo)}, ${fmt(m.hi)}]`;
     lines.push(
-      `| ${c.mode} | ${c.seeds} | ${ci(c.meanRally)} | ${ci(c.earlyRally)} | ${ci(c.lateRally)} | ${ci(c.improvement)} |`,
+      `| ${c.condition} | ${c.seeds} | ${ci(c.meanRally)} | ${ci(c.earlyRally)} | ${ci(c.lateRally)} | ${ci(c.improvement)} | ${ci(c.steeringLate)} | ${ci(c.mappingEnd)} |`,
     );
   }
   lines.push('');
