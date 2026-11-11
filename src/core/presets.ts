@@ -12,7 +12,7 @@ export const PRESETS: Record<PresetName, Preset> = {
   dishbrain: {
     label: 'DishBrain-like',
     description:
-      '1000 neurons, 4-40 Hz rate code, 100 Hz / 100 ms predictable burst, 5 Hz unpredictable stimulation.',
+      '1000 neurons, 4-40 Hz rate code, 100 Hz / 100 ms predictable burst, 5 Hz unpredictable stimulation, 4 s feedback window.',
     apply: () => {},
   },
   highPlasticity: {

@@ -5,7 +5,13 @@ import type { FrameMsg, LayoutMsg } from '../protocol.ts';
 import { fmtClock, heat, niceTicks, rgba, surface, type Theme } from './canvas.ts';
 
 export const modeColor = (th: Theme, m: FeedbackMode): string =>
-  m === 'predictable' ? th.predictable : m === 'unpredictable' ? th.unpredictable : th.silent;
+  m === 'dishbrain'
+    ? th.dishbrain
+    : m === 'predictable'
+      ? th.predictable
+      : m === 'unpredictable'
+        ? th.unpredictable
+        : th.silent;
 
 const roleColor = (th: Theme, r: Role): string =>
   r === 'sensory' ? th.sensory : r === 'up' ? th.up : r === 'down' ? th.down : th.faint;
@@ -143,7 +149,8 @@ export function drawMea(
       ctx.arc(x + cell / 2, y + cell / 2, cell * 0.09, 0, Math.PI * 2);
       ctx.fill();
       if (stim && stim[e]) {
-        ctx.strokeStyle = stim[e] === 2 ? th.unpredictable : th.text;
+        ctx.strokeStyle =
+          stim[e] === 3 ? th.predictable : stim[e] === 2 ? th.unpredictable : th.text;
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.arc(x + cell / 2, y + cell / 2, cell * 0.28, 0, Math.PI * 2);

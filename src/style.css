@@ -16,6 +16,7 @@
   --down: #ff5fa2;
   --exc: #7cffb2;
   --inh: #b48cff;
+  --dishbrain: #ffe27a;
   --predictable: #7cffb2;
   --unpredictable: #ff6b5f;
   --silent: #8fa3c7;
@@ -44,6 +45,7 @@
   --down: #c2286e;
   --exc: #0d8a55;
   --inh: #6c45c9;
+  --dishbrain: #8a6400;
   --predictable: #0d8a55;
   --unpredictable: #d23b2f;
   --silent: #4f6690;
@@ -268,6 +270,13 @@ button {
   border-color: currentColor;
   background: var(--panel);
 }
+.seg-btn[data-mode='dishbrain'][aria-checked='true'] {
+  color: var(--dishbrain);
+}
+.seg-sep {
+  margin: 0 2px 0 8px;
+  font-size: 10px;
+}
 .seg-btn[data-mode='predictable'][aria-checked='true'] {
   color: var(--predictable);
 }
@@ -282,6 +291,9 @@ button {
   height: 8px;
   border-radius: 50%;
   display: inline-block;
+}
+.dot-dishbrain {
+  background: var(--dishbrain);
 }
 .dot-predictable {
   background: var(--predictable);

@@ -61,7 +61,7 @@ const SPEEDS = [1, 2, 5, 10, 20, 50, 100];
 let speedIdx = 0;
 let paused = false;
 let plastic = true;
-let mode: FeedbackMode = 'predictable';
+let mode: FeedbackMode = 'dishbrain';
 let seed = (Math.random() * 1e9) >>> 0;
 let config: SimConfig;
 
@@ -219,7 +219,7 @@ document.addEventListener('keydown', (e) => {
   } else if (k === 's' || k === 'S') {
     if (!paused) setPaused(true);
     send({ type: 'step', ms: 100 });
-  } else if (k === '1' || k === '2' || k === '3') {
+  } else if (k === '1' || k === '2' || k === '3' || k === '4') {
     setMode(FEEDBACK_MODES[Number(k) - 1]);
   } else if (k === '+' || k === '=') {
     setSpeed(speedIdx + 1);
@@ -465,7 +465,7 @@ expForm.addEventListener('submit', (e) => {
 
 /* ------------------------------------------------------------ boot */
 
-setMode('predictable');
+setMode('dishbrain');
 setSpeed(0);
 restart(params.current(), false);
 drawCurves(cv.exp, [], 60_000, theme);

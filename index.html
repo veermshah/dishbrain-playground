@@ -69,15 +69,26 @@
     </header>
 
     <nav class="controls" aria-label="Simulation controls">
-      <div class="seg" role="radiogroup" aria-label="Feedback after a miss">
+      <div class="seg" role="radiogroup" aria-label="Feedback protocol">
         <span class="ctl-label" id="mode-label">Feedback</span>
         <button
           type="button"
           role="radio"
           class="seg-btn"
-          data-mode="predictable"
+          data-mode="dishbrain"
           aria-checked="true"
-          title="Predictable (1)"
+          title="DishBrain protocol: burst after a hit, noise after a miss (1)"
+        >
+          <span class="dot dot-dishbrain" aria-hidden="true"></span>DishBrain
+        </button>
+        <span class="seg-sep ctl-label" aria-hidden="true">ablations</span>
+        <button
+          type="button"
+          role="radio"
+          class="seg-btn"
+          data-mode="predictable"
+          aria-checked="false"
+          title="Ablation: predictable burst after a miss (2)"
         >
           <span class="dot dot-predictable" aria-hidden="true"></span>Predictable
         </button>
@@ -87,7 +98,7 @@
           class="seg-btn"
           data-mode="unpredictable"
           aria-checked="false"
-          title="Unpredictable (2)"
+          title="Ablation: unpredictable noise after a miss (3)"
         >
           <span class="dot dot-unpredictable" aria-hidden="true"></span>Unpredictable
         </button>
@@ -97,7 +108,7 @@
           class="seg-btn"
           data-mode="silent"
           aria-checked="false"
-          title="Silent (3)"
+          title="Ablation: nothing after a miss (4)"
         >
           <span class="dot dot-silent" aria-hidden="true"></span>Silent
         </button>
@@ -266,6 +277,7 @@
         <label>Bin (s) <input id="exp-bin" type="number" min="10" max="600" value="60" /></label>
         <fieldset class="exp-modes">
           <legend class="sr-only">Conditions</legend>
+          <label><input type="checkbox" name="mode" value="dishbrain" checked /> dishbrain</label>
           <label
             ><input type="checkbox" name="mode" value="predictable" checked /> predictable</label
           >
@@ -302,7 +314,7 @@
         <a href="https://github.com/veermshah/dishbrain-playground">Source on GitHub</a>.
       </p>
       <p class="dim small mono">
-        Keys: Space pause · S step · 1/2/3 mode · +/− speed · P STDP · R reset · T theme · ? help
+        Keys: Space pause · S step · 1–4 mode · +/− speed · P STDP · R reset · T theme · ? help
       </p>
     </footer>
 
@@ -344,15 +356,23 @@
           <div>
             <h3>Controls</h3>
             <dl class="defs">
-              <dt>Predictable</dt>
-              <dd>After a miss, all 16 sensory electrodes pulse together at 100 Hz for 100 ms.</dd>
-              <dt>Unpredictable</dt>
+              <dt>DishBrain (default)</dt>
               <dd>
-                After a miss, random subsets of sensory electrodes pulse at random times (5 Hz, 2×
-                amplitude) for the whole 2 s pause.
+                The paper's protocol. After a hit, all 16 sensory electrodes pulse together at 100
+                Hz for 100 ms while play continues. After a miss, the game pauses for 4 s while
+                random subsets of sensory electrodes pulse at random times (5 Hz, 2× amplitude).
               </dd>
-              <dt>Silent</dt>
-              <dd>After a miss, the game pauses for 2 s with no stimulation at all.</dd>
+              <dt>Predictable (ablation)</dt>
+              <dd>
+                Hits get nothing. After a miss, the 100 Hz / 100 ms burst, then a quiet 4 s pause.
+              </dd>
+              <dt>Unpredictable (ablation)</dt>
+              <dd>Hits get nothing. After a miss, the 4 s of random stimulation.</dd>
+              <dt>Silent (ablation)</dt>
+              <dd>
+                Hits get nothing. After a miss, the game pauses for 4 s with no stimulation, then
+                resets. This matches the paper's "silent" control.
+              </dd>
               <dt>STDP</dt>
               <dd>Turns plasticity on or off. With it off, nothing can be learned.</dd>
               <dt>Speed</dt>
