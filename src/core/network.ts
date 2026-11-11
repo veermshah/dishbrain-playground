@@ -34,6 +34,16 @@ export interface NetworkParams {
   noiseAmp: number;
   /** Whether STDP is active. */
   plastic: boolean;
+  /**
+   * Plasticity rule. 'stdp' changes weights directly. 'rstdp' (reward-modulated
+   * STDP, Izhikevich 2007) writes the same STDP updates into a per-synapse
+   * eligibility trace instead, and weights only change when `applyReward` is called.
+   */
+  rule: 'stdp' | 'rstdp';
+  /** Eligibility trace time constant for R-STDP, ms. */
+  tauElig: number;
+  /** Weight change per unit of eligibility times reward. */
+  rewardLr: number;
 }
 
 export const defaultNetworkParams: NetworkParams = {
@@ -50,6 +60,9 @@ export const defaultNetworkParams: NetworkParams = {
   noiseRate: 0.0025,
   noiseAmp: 20,
   plastic: true,
+  rule: 'stdp',
+  tauElig: 1000,
+  rewardLr: 1,
 };
 
 export class Network {
@@ -81,6 +94,11 @@ export class Network {
   /** One exponential spike trace per neuron (pre and post share tau). */
   readonly trace: Float32Array;
   private readonly traceDecay: number;
+
+  /** R-STDP eligibility per synapse, stored lazily with the time it was last touched. */
+  readonly elig: Float32Array;
+  private readonly eligT: Int32Array;
+  private readonly eligDecayTable: Float32Array;
 
   /** Ring buffer of delayed synaptic input, maxDelay+1 slots of n. */
   private readonly delayBuf: Float32Array;
@@ -190,6 +208,12 @@ export class Network {
     }
 
     this.trace = new Float32Array(n);
+    this.elig = new Float32Array(p.rule === 'rstdp' ? nSyn : 0);
+    this.eligT = new Int32Array(p.rule === 'rstdp' ? nSyn : 0);
+    const tableLen = Math.ceil(10 * p.tauElig) + 1;
+    this.eligDecayTable = new Float32Array(p.rule === 'rstdp' ? tableLen : 0);
+    for (let k = 0; k < this.eligDecayTable.length; k++)
+      this.eligDecayTable[k] = Math.exp(-k / p.tauElig);
     this.traceDecay = Math.exp(-1 / p.tauStdp);
     this.slots = maxDelay + 1;
     this.delayBuf = new Float32Array(this.slots * n);
@@ -269,6 +293,23 @@ export class Network {
   private applyStdp(ns: number): void {
     const { spikes, outStart, outTarget, plasticSyn, w, inStart, inSyn, inSrc, trace, nExc } = this;
     const { aPlus, aMinus, wMax } = this.p;
+    if (this.p.rule === 'rstdp') {
+      for (let q = 0; q < ns; q++) {
+        const i = spikes[q];
+        if (i < nExc) {
+          for (let syn = outStart[i]; syn < outStart[i + 1]; syn++) {
+            if (!plasticSyn[syn]) continue;
+            const tr = trace[outTarget[syn]];
+            if (tr > 1e-4) this.addElig(syn, -aMinus * tr);
+          }
+        }
+        for (let k = inStart[i]; k < inStart[i + 1]; k++) {
+          const tr = trace[inSrc[k]];
+          if (tr > 1e-4) this.addElig(inSyn[k], aPlus * tr);
+        }
+      }
+      return;
+    }
     for (let q = 0; q < ns; q++) {
       const i = spikes[q];
       if (i < nExc) {
@@ -289,6 +330,46 @@ export class Network {
           w[syn] = nw > wMax ? wMax : nw;
         }
       }
+    }
+  }
+
+  private eligDecay(dt: number): number {
+    const table = this.eligDecayTable;
+    return dt < table.length ? table[dt] : 0;
+  }
+
+  private addElig(syn: number, dv: number): void {
+    const t = this.t;
+    this.elig[syn] = this.elig[syn] * this.eligDecay(t - this.eligT[syn]) + dv;
+    this.eligT[syn] = t;
+  }
+
+  /** Current (decayed) eligibility of a synapse. */
+  eligibility(syn: number): number {
+    if (this.p.rule !== 'rstdp') return 0;
+    return this.elig[syn] * this.eligDecay(this.t - this.eligT[syn]);
+  }
+
+  /**
+   * Deliver a scalar reward (e.g. +1 for a hit, -1 for a miss). Every plastic
+   * synapse moves by rewardLr * reward * eligibility, clipped to [0, wMax].
+   * Does nothing unless the rule is 'rstdp' and plasticity is on.
+   */
+  applyReward(reward: number): void {
+    if (this.p.rule !== 'rstdp' || !this.p.plastic || reward === 0) return;
+    const { w, plasticSyn, elig, eligT } = this;
+    const k = this.p.rewardLr * reward;
+    const wMax = this.p.wMax;
+    const t = this.t;
+    for (let s = 0; s < w.length; s++) {
+      if (!plasticSyn[s]) continue;
+      const e = elig[s];
+      if (e === 0) continue;
+      const decayed = e * this.eligDecay(t - eligT[s]);
+      elig[s] = decayed;
+      eligT[s] = t;
+      const nw = w[s] + k * decayed;
+      w[s] = nw < 0 ? 0 : nw > wMax ? wMax : nw;
     }
   }
 
