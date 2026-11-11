@@ -36,18 +36,17 @@ STDP in a generic spiking network is enough.
 
 ## What's in the simulation
 
-| Piece    | Model                                                                                                                                                                                                                                                                                  |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Neurons  | 1000 Izhikevich neurons [2], 80% regular-spiking excitatory and 20% fast-spiking inhibitory, 1 ms steps                                                                                                                                                                                |
-| Wiring   | Fixed out-degree random graph (p = 0.1, 100 synapses per neuron), excitatory delays 1-10 ms, background noise kicks, in the style of [3]                                                                                                                                               |
-| Learning | Additive trace-based STDP on excitatory-to-excitatory synapses, τ = 20 ms, slightly depression-dominated (A− = 1.2 A+), weights clipped to [0, 10]                                                                                                                                     |
-| MEA      | Each neuron sits under one of 64 electrodes. Columns 3-4 are sensory, columns 0-1 are the "up" motor region, columns 6-7 are "down", columns 2 and 5 are recording only                                                                                                                |
-| Encoding | Place code: the sensory row that gets pulsed is the ball's vertical offset from the paddle, in 8 bins. Rate code: pulse frequency goes from 4 Hz (ball at the far wall) to 40 Hz (ball at the paddle), as in the paper                                                                 |
-| Decoding | Smoothed population rates of the two motor regions (τ = 100 ms). Paddle velocity is proportional to (down − up)                                                                                                                                                                        |
-| Feedback | After every miss the game pauses for 2 s. **Predictable**: all 16 sensory electrodes pulse together at 100 Hz for 100 ms. **Unpredictable**: 5 Hz random events, each hitting a random half of the sensory electrodes at 2× amplitude, for the whole pause. **Silent**: no stimulation |
+| Piece    | Model                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Neurons  | 1000 Izhikevich neurons [2], 80% regular-spiking excitatory and 20% fast-spiking inhibitory, 1 ms steps                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Wiring   | Fixed out-degree random graph (p = 0.1, 100 synapses per neuron), excitatory delays 1-10 ms, background noise kicks, in the style of [3]                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| Learning | Additive trace-based STDP on excitatory-to-excitatory synapses, τ = 20 ms, slightly depression-dominated (A− = 1.2 A+), weights clipped to [0, 10]                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| MEA      | Each neuron sits under one of 64 electrodes. Columns 3-4 are sensory, columns 0-1 are the "up" motor region, columns 6-7 are "down", columns 2 and 5 are recording only                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Encoding | Place code: the sensory row that gets pulsed is the ball's vertical offset from the paddle, in 8 bins. Rate code: pulse frequency goes from 4 Hz (ball at the far wall) to 40 Hz (ball at the paddle), as in the paper                                                                                                                                                                                                                                                                                                                                                  |
+| Decoding | Smoothed population rates of the two motor regions (τ = 100 ms). Paddle velocity is proportional to (down − up)                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| Feedback | **DishBrain** (default, the paper's protocol): after a hit, all 16 sensory electrodes pulse together at 100 Hz for 100 ms while play continues; after a miss, the game pauses for 4 s while random half-subsets of the sensory electrodes pulse at 5 Hz and 2× amplitude. **Ablations**, which change only what follows a miss and give nothing after a hit: **predictable** (the 100 Hz / 100 ms burst, then a quiet pause), **unpredictable** (the 4 s of random stimulation), **silent** (a quiet 4 s pause, then the game resets, as in the paper's silent control) |
 
-One deliberate difference from the paper: here all three conditions differ _only_ in what happens after a
-miss, so the experiment isolates that single variable. In the paper, the predictable burst followed hits.
+Every condition uses the same 4 s post-miss window, so they differ only in the stimulation they deliver.
 
 The place code is in paddle-relative coordinates. I chose that so a direct sensory-to-motor mapping is
 enough to play well: "ball above the paddle" should drive the up region and "ball below" the down region.
@@ -66,11 +65,11 @@ npm run experiment   # headless comparison, writes outputs/experiment.{json,csv}
 ```
 
 `npm run experiment` takes flags: `--seeds 12 --minutes 20 --bin 120 --preset dishbrain|highPlasticity|noPlasticity --modes predictable,silent --threads 8`.
-It spreads sessions across worker threads; on my machine 36 twenty-minute sessions take about a minute.
+It spreads sessions across worker threads; on my machine 48 twenty-minute sessions take about a minute and a half.
 
 ### In the browser
 
-- **Feedback** toggles the post-miss condition live (keys `1`, `2`, `3`).
+- **Feedback** switches live between the DishBrain protocol and the three ablations (keys `1`-`4`).
 - **Pause / step / speed** go from 1× to 100× real time (`Space`, `S`, `+`, `-`).
 - **STDP** turns plasticity on and off without restarting (`P`). **Reset** builds a new culture (`R`).
 - **Parameters** expose neuron count, connection density, STDP rates and window, noise, pulse amplitude,
@@ -96,50 +95,62 @@ t-intervals across seeds. Raw results are in [`results/`](results/).
 
 | Condition     | Mean rally (all)     | Early third          | Late third           | Late − early          |
 | ------------- | -------------------- | -------------------- | -------------------- | --------------------- |
-| predictable   | 0.306 [0.289, 0.322] | 0.280 [0.243, 0.316] | 0.330 [0.276, 0.384] | 0.050 [−0.030, 0.131] |
-| unpredictable | 0.299 [0.267, 0.331] | 0.300 [0.252, 0.349] | 0.300 [0.263, 0.337] | 0.000 [−0.051, 0.050] |
-| silent        | 0.307 [0.290, 0.325] | 0.294 [0.249, 0.339] | 0.326 [0.274, 0.378] | 0.032 [−0.052, 0.116] |
+| dishbrain     | 0.306 [0.283, 0.330] | 0.299 [0.249, 0.350] | 0.339 [0.270, 0.408] | 0.040 [−0.062, 0.142] |
+| predictable   | 0.301 [0.277, 0.325] | 0.303 [0.249, 0.356] | 0.322 [0.273, 0.372] | 0.020 [−0.045, 0.084] |
+| unpredictable | 0.307 [0.282, 0.332] | 0.301 [0.255, 0.346] | 0.354 [0.295, 0.414] | 0.054 [−0.011, 0.118] |
+| silent        | 0.309 [0.280, 0.338] | 0.307 [0.251, 0.364] | 0.319 [0.262, 0.375] | 0.012 [−0.051, 0.074] |
 
-Mann-Whitney U on late-third rally length: predictable vs silent p = 0.91, predictable vs unpredictable
-p = 0.44, unpredictable vs silent p = 0.56. The tests on improvement (late − early) are no better (all
-p > 0.5).
+Mann-Whitney U, DishBrain protocol against silent: p = 0.30 on late-third rally length and p = 0.38 on
+improvement (late − early). Against the predictable and unpredictable ablations, all p > 0.4. Among the
+ablations, the lowest p is unpredictable vs silent on late rally, p = 0.24.
 
 **Controls**
 
 | Preset                               | Condition     | Late third           | Late − early           |
 | ------------------------------------ | ------------- | -------------------- | ---------------------- |
-| No plasticity (STDP off)             | predictable   | 0.309 [0.252, 0.366] | −0.002 [−0.080, 0.076] |
-|                                      | unpredictable | 0.337 [0.290, 0.385] | 0.048 [−0.015, 0.110]  |
-|                                      | silent        | 0.314 [0.254, 0.373] | −0.005 [−0.088, 0.078] |
-| High plasticity (2.5× A±, τ = 40 ms) | predictable   | 0.331 [0.281, 0.380] | 0.031 [−0.069, 0.130]  |
-|                                      | unpredictable | 0.319 [0.276, 0.361] | 0.027 [−0.024, 0.078]  |
-|                                      | silent        | 0.314 [0.264, 0.364] | 0.013 [−0.072, 0.097]  |
+| No plasticity (STDP off)             | dishbrain     | 0.331 [0.245, 0.417] | 0.047 [−0.031, 0.124]  |
+|                                      | predictable   | 0.297 [0.243, 0.351] | −0.010 [−0.082, 0.062] |
+|                                      | unpredictable | 0.325 [0.247, 0.402] | 0.032 [−0.040, 0.104]  |
+|                                      | silent        | 0.291 [0.239, 0.343] | −0.024 [−0.091, 0.043] |
+| High plasticity (2.5× A±, τ = 40 ms) | dishbrain     | 0.350 [0.292, 0.408] | 0.029 [−0.049, 0.107]  |
+|                                      | predictable   | 0.334 [0.271, 0.398] | 0.032 [−0.038, 0.102]  |
+|                                      | unpredictable | 0.350 [0.290, 0.410] | 0.028 [−0.060, 0.116]  |
+|                                      | silent        | 0.309 [0.261, 0.357] | 0.005 [−0.061, 0.071]  |
 
-No pairwise comparison in either control reaches p < 0.25.
+Across all three presets (36 comparisons), no p-value falls below 0.23.
 
 ### What this means
 
-**Predictable feedback did not beat silent or unpredictable feedback.** No condition learned. Rally length
-stays around 0.3 hits per rally from start to finish, which is what a paddle drifting at random gets with
-this paddle size. The network with plasticity switched off scores the same as the networks with it on, so
-STDP is not doing anything useful for the task here.
+**The DishBrain protocol did not beat silent, and none of the ablations did either.** No condition
+learned. Rally length stays around 0.3 hits per rally from start to finish, which is what a paddle drifting
+at random gets with this paddle size. The network with plasticity switched off scores the same as the
+networks with it on, including under the paper's protocol (0.331 late-third rally length with STDP off,
+0.339 with it on), so STDP is not doing anything useful for the task here.
 
 Before settling on the defaults I also tried a small number of variants by hand on 4-6 seeds each:
 faster motor decoding (τ = 20 ms), larger STDP steps, a longer STDP window, stronger sensory pulses and
 doubled feedback strength. None of them changed the picture, and I did not keep searching for a setting
 that "works", because picking whichever configuration happens to clear p < 0.05 would just be p-hacking.
 
-My read on why plain STDP fails here is credit assignment in time. STDP only sees spike pairs about 20 ms
-apart. A miss, and the feedback after it, comes hundreds of milliseconds to seconds after the motor
-activity that caused it, so the feedback cannot single out the synapses that produced the wrong move. All
-it can do is nudge every synapse that happens to be active during the feedback, which is the same set in
-every trial. Getting the effect would need something that bridges that gap: eligibility traces with a
-neuromodulatory signal (Izhikevich's dopamine-modulated STDP), short-term plasticity, homeostatic
-mechanisms that respond to how predictable the input is, or a much tighter sensorimotor loop in the style
-of "learning by stimulation avoidance". Those are the next things I want to try.
+### Why plain STDP can't learn from this feedback
 
-This is also a useful negative result in itself: whatever the cultures in the paper are doing, a
-generic STDP network does not reproduce it just by being exposed to the same stimulation protocol.
+- **Timing.** STDP only pairs spikes about 20 ms apart. The feedback arrives hundreds of milliseconds to
+  seconds after the motor activity that decided the hit or miss, so it cannot reach back to the synapses
+  that made the move.
+- **The feedback isn't contingent on any particular synapse.** The burst and the noise land on the same
+  sensory electrodes whatever the network just did. They change whichever synapses happen to be active
+  during the feedback, and that set is the same after good moves and bad ones.
+- **No reward signal.** STDP has no way to tell a hit from a miss. Its update depends only on spike
+  timing, so "predictable" and "unpredictable" are just two stimulation patterns to it, not good and bad
+  outcomes.
+
+Bridging that gap needs extra machinery: eligibility traces gated by a neuromodulatory signal
+(Izhikevich's dopamine-modulated STDP), or a tight sensorimotor loop in which the network's own action
+switches the stimulation off within the STDP window ("learning by stimulation avoidance"). Both are on my
+list.
+
+This is also a useful negative result in itself: whatever the cultures in the paper are doing, a generic
+STDP network does not reproduce it just by being given the same stimulation protocol.
 
 ## Architecture
 
@@ -174,8 +185,11 @@ produce identical numbers. On a laptop the 1000-neuron loop runs at roughly 100�
   something about this model, not about the cultures.
 - The network is tiny next to a real culture (1000 neurons against hundreds of thousands) and its
   connectivity is random rather than grown.
-- The protocol is simplified: a 2 s pause instead of 4 s, feedback after misses only, 16 sensory
-  electrodes on an 8×8 grid instead of the paper's layout on a high-density array.
+- The protocol is simplified: 16 sensory electrodes on an 8×8 grid instead of the paper's layout on a
+  high-density array, and stimulation amplitudes are model currents rather than the paper's 75 mV and
+  150 mV.
+- The paper's separate **no-feedback** condition, where the ball bounces off the back wall and hits and
+  misses have no consequence, is not implemented.
 - Stimulation is modelled as a current injected into every neuron under an electrode, with no spread to
   neighbours and no stimulation artefact.
 - The p-values are uncorrected for multiple comparisons. With a null result that only makes the
